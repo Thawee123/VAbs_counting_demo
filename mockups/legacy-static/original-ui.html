@@ -1,0 +1,1767 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Baksters Counting - Original UI Mockup</title>
+  <style>
+    :root {
+      --primary: #FF6B35;
+      --primary-dark: #ea580c;
+      --line: #06C755;
+      --success: #00a500;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --soft: #f9fafb;
+      --danger: #ef4444;
+      --warning: #facc15;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: #f3f4f6; color: var(--text); }
+    body { -webkit-font-smoothing: antialiased; }
+    button, input, textarea { font: inherit; }
+    button { cursor: pointer; border: 0; background: transparent; padding: 0; }
+
+    .review-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px minmax(430px, 1fr) 360px;
+      gap: 24px;
+      padding: 28px;
+      align-items: center;
+    }
+
+    .side-panel {
+      align-self: stretch;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 16px 45px rgba(15, 23, 42, .08);
+      overflow: hidden;
+    }
+
+    .side-title { margin: 0; font-size: 18px; line-height: 1.3; font-weight: 800; }
+    .side-copy { margin: 8px 0 18px; font-size: 13px; line-height: 1.5; color: var(--muted); }
+    .flow-list { display: grid; gap: 8px; }
+    .flow-button {
+      width: 100%;
+      min-height: 42px;
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 9px;
+      align-items: center;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: #374151;
+      background: #fff;
+      text-align: left;
+    }
+    .flow-button.active { border-color: var(--primary); background: #fff7ed; color: var(--primary); }
+    .flow-index {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: #f3f4f6;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .flow-button.active .flow-index { background: var(--primary); color: #fff; }
+    .flow-text { display: grid; gap: 1px; min-width: 0; }
+    .flow-name { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .flow-desc { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .brand-lockup {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      margin-bottom: 18px;
+    }
+    .brand-lockup img { width: 40px; height: 40px; object-fit: contain; }
+    .brand-name { font-size: 14px; font-weight: 800; }
+    .brand-sub { font-size: 12px; color: var(--muted); }
+    .notes { display: grid; gap: 12px; }
+    .note { border-left: 3px solid var(--primary); padding-left: 10px; font-size: 13px; line-height: 1.45; color: #374151; }
+    .video-panel {
+      align-self: center;
+      padding: 0;
+      border: 0;
+      background: #111;
+      display: grid;
+      place-items: center;
+      aspect-ratio: 390 / 844;
+      overflow: hidden;
+    }
+    .walkthrough-video {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 8px;
+      background: #000;
+      object-fit: cover;
+    }
+    .stage { display: grid; place-items: center; }
+
+    .app {
+      position: relative;
+      width: 390px;
+      height: 844px;
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 28px 80px rgba(15, 23, 42, .22);
+    }
+
+    body.capture { background: #fff; overflow: hidden; }
+    body.capture .review-shell {
+      min-height: 100vh;
+      display: block;
+      padding: 0;
+    }
+    body.capture .side-panel { display: none; }
+    body.capture .stage { display: block; }
+    body.capture .app {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 390px;
+      height: 844px;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .page {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      opacity: 1;
+      transform: translateX(0);
+      transition: opacity .24s ease, transform .24s ease;
+    }
+    .page.gray { background: var(--soft); }
+    .content {
+      flex: 1;
+      width: 100%;
+      max-width: 448px;
+      margin: 0 auto;
+      padding: 24px 16px;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    .content::-webkit-scrollbar { display: none; }
+    .content.tight { padding-top: 8px; }
+    .content.nav-space { padding-bottom: 130px; }
+    .content.action-space { padding-bottom: 118px; }
+
+    .header {
+      height: 57px;
+      flex: 0 0 auto;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 54px;
+    }
+    .header-title {
+      font-size: 20px;
+      font-weight: 650;
+      line-height: 1.15;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .header-icon {
+      position: absolute;
+      top: 50%;
+      width: 40px;
+      height: 40px;
+      transform: translateY(-50%);
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      color: #374151;
+    }
+    .header-icon.left { left: 8px; }
+    .header-icon.right { right: 8px; }
+    .icon { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .icon.solid { fill: currentColor; stroke: none; }
+
+    .tabs {
+      flex: 0 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      z-index: 4;
+    }
+    .tab {
+      height: 48px;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+      border-bottom: 2px solid transparent;
+    }
+    .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    .bottom-nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 64px;
+      background: #fff;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      z-index: 12;
+    }
+    .nav-item {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      color: #9ca3af;
+      font-size: 12px;
+      line-height: 1;
+      font-weight: 500;
+      min-width: 0;
+    }
+    .nav-item svg { width: 24px; height: 24px; }
+    .nav-item.active { color: var(--primary); }
+    .badge {
+      position: absolute;
+      top: 6px;
+      right: calc(50% - 20px);
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: var(--danger);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 10px;
+      font-weight: 800;
+      border: 2px solid #fff;
+    }
+
+    .btn {
+      width: 100%;
+      min-height: 48px;
+      border-radius: 999px;
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
+    }
+    .btn:active { transform: scale(.98); }
+    .btn.primary { background: var(--primary); color: #fff; }
+    .btn.outline { background: #fff; color: #374151; border: 1px solid #d1d5db; }
+    .btn.line { background: var(--line); color: #fff; border-radius: 8px; }
+    .btn.square { border-radius: 8px; min-height: 44px; font-size: 14px; }
+    .btn.danger-soft { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+
+    .login-screen {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      text-align: center;
+      background: #fff;
+    }
+    .logo-main { width: 138px; height: 138px; object-fit: contain; margin-bottom: 24px; }
+    .login-title { margin: 0; font-size: 26px; line-height: 1.2; font-weight: 800; }
+    .login-brand { margin-top: 5px; color: var(--muted); font-size: 14px; font-weight: 700; letter-spacing: .08em; }
+    .login-actions { width: 100%; margin-top: 42px; display: grid; gap: 14px; }
+
+    .sheet-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, .5);
+      z-index: 30;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .bottom-sheet {
+      width: 100%;
+      background: #fff;
+      border-radius: 24px 24px 0 0;
+      padding: 24px 24px 32px;
+      animation: slideUp .3s ease-out both;
+    }
+    .bottom-sheet.register-sheet { padding: 18px 22px 24px; }
+    .sheet-title { margin: 0; text-align: center; font-size: 22px; font-weight: 800; }
+    .sheet-desc { margin: 8px auto 22px; text-align: center; color: var(--muted); font-size: 14px; line-height: 1.45; max-width: 280px; }
+    .avatar {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 18px;
+      border-radius: 999px;
+      background: #fff5f2;
+      display: grid;
+      place-items: center;
+      border: 1px solid #fed7aa;
+      overflow: hidden;
+    }
+    .avatar img { width: 72px; height: 72px; object-fit: contain; }
+    .form { display: grid; gap: 14px; }
+    .field { display: grid; gap: 6px; }
+    .label { color: #4b5563; font-size: 13px; font-weight: 650; }
+    .input {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 0 13px;
+      color: #111827;
+      background: #fff;
+      outline: none;
+      font-size: 15px;
+    }
+    .input:focus { border-color: transparent; box-shadow: 0 0 0 2px var(--primary); }
+    .register-sheet .sheet-desc { margin: 5px auto 12px; font-size: 13px; }
+    .register-sheet .avatar { width: 64px; height: 64px; margin-bottom: 12px; }
+    .register-sheet .avatar img { width: 58px; height: 58px; }
+    .register-sheet .form { gap: 9px; }
+    .register-sheet .field { gap: 4px; }
+    .register-sheet .label { font-size: 12px; }
+    .register-sheet .input { min-height: 39px; font-size: 13px; }
+    .register-sheet .btn { min-height: 44px; font-size: 15px; }
+
+    .approval {
+      text-align: center;
+      height: 100%;
+      display: grid;
+      align-content: center;
+      padding: 36px;
+      background: #fff;
+    }
+    .status-icon {
+      width: 74px;
+      height: 74px;
+      margin: 0 auto 18px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: #dcfce7;
+      color: var(--success);
+    }
+    .status-icon.warn { background: #fff7ed; color: var(--primary); }
+    .approval h2 { margin: 0; font-size: 22px; font-weight: 800; }
+    .approval p { margin: 10px 0 26px; color: var(--muted); line-height: 1.5; font-size: 14px; }
+
+    .search-wrap { position: relative; margin-bottom: 12px; }
+    .search-wrap .icon {
+      position: absolute;
+      top: 50%;
+      left: 13px;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      color: #9ca3af;
+    }
+    .search {
+      height: 44px;
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+      padding: 0 44px 0 40px;
+      outline: none;
+      font-size: 14px;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+    }
+    .list-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .list-meta > span:first-child {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .location-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      height: 28px;
+      padding: 0 10px;
+      border: 1px solid #fed7aa;
+      color: var(--primary);
+      background: #fff7ed;
+      border-radius: 999px;
+      font-weight: 700;
+      flex: 0 0 auto;
+    }
+    .product-list { display: grid; gap: 10px; }
+    .product-row {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      min-height: 106px;
+      background: #fff;
+      border: 1px solid #f3f4f6;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, .06);
+      text-align: left;
+    }
+    .product-row.locked { border-left: 4px solid var(--warning); opacity: .96; }
+    .product-row.selected {
+      border-color: rgba(255, 96, 49, .72);
+      box-shadow: 0 0 0 2px rgba(255, 96, 49, .28), 0 1px 3px rgba(15, 23, 42, .06);
+    }
+    .product-img {
+      width: 80px;
+      height: 80px;
+      flex: 0 0 80px;
+      border-radius: 8px;
+      background: #f3f4f6;
+      object-fit: contain;
+      border: 1px solid #f3f4f6;
+    }
+    .product-info { min-width: 0; flex: 1; align-self: stretch; display: flex; flex-direction: column; justify-content: flex-start; padding: 2px 98px 30px 0; }
+    .sku { margin: 0; color: #9ca3af; font-size: 12px; line-height: 1.35; }
+    .product-name { margin: 2px 0 0; font-size: 14px; line-height: 1.25; font-weight: 800; color: #111827; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .row-action {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      color: #4b5563;
+      background: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+      max-width: 132px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .lock-chip {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #fef3c7;
+      color: #92400e;
+      font-size: 11px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+    }
+    .deadline {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 76px;
+      min-height: 44px;
+      border-radius: 12px;
+      border: 1px solid #fecaca;
+      background: #fef2f2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #ef4444;
+      font-size: 13px;
+      font-weight: 800;
+      z-index: 8;
+    }
+
+    .camera-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      background: #050505;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .camera-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.03) contrast(1.04);
+    }
+    .camera-box.photo-barcode .camera-photo { object-position: center center; }
+    .camera-box.photo-count .camera-photo { object-position: center center; }
+    .camera-box.photo-verify .camera-photo { object-position: center 43%; }
+    .camera-box.photo-camera::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 45%, transparent 0 52%, rgba(0,0,0,.22) 100%),
+        linear-gradient(180deg, rgba(0,0,0,.08), transparent 20%, rgba(0,0,0,.08));
+      pointer-events: none;
+      z-index: 1;
+    }
+    .camera-scene {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px) 0 0 / 33.33% 100%,
+        linear-gradient(0deg, rgba(255,255,255,.08) 1px, transparent 1px) 0 0 / 100% 25%,
+        radial-gradient(circle at 52% 42%, rgba(255,255,255,.16), transparent 36%),
+        #060606;
+    }
+    .camera-shelf {
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: rgba(255,255,255,.24);
+    }
+    .camera-shelf.one { top: 31%; }
+    .camera-shelf.two { top: 58%; }
+    .camera-shelf.three { top: 78%; }
+    .mock-product {
+      position: absolute;
+      width: 54px;
+      height: 82px;
+      border-radius: 8px 8px 5px 5px;
+      background: #fff;
+      object-fit: contain;
+      padding: 3px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.4);
+    }
+    .mock-product.p1 { left: 23%; top: 21%; transform: rotate(-3deg); }
+    .mock-product.p2 { left: 43%; top: 20%; transform: rotate(2deg); }
+    .mock-product.p3 { left: 61%; top: 22%; transform: rotate(-1deg); }
+    .mock-product.p4 { left: 28%; top: 48%; transform: rotate(2deg); }
+    .mock-product.p5 { left: 50%; top: 47%; transform: rotate(-2deg); }
+    .mock-product.p6 { left: 65%; top: 48%; transform: rotate(1deg); }
+
+    .barcode-card {
+      position: absolute;
+      left: 18%;
+      right: 18%;
+      top: 43%;
+      height: 56px;
+      padding: 7px 10px;
+      border-radius: 6px;
+      background: #fff;
+      box-shadow: 0 10px 28px rgba(0,0,0,.42);
+      display: grid;
+      gap: 4px;
+      align-content: center;
+    }
+    .barcode-lines {
+      height: 24px;
+      background: repeating-linear-gradient(90deg, #111 0 2px, transparent 2px 5px, #111 5px 7px, transparent 7px 11px);
+    }
+    .barcode-number { text-align: center; color: #111827; font-size: 8px; letter-spacing: .12em; font-weight: 800; }
+    .real-camera-scene {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255,255,255,.18), transparent 30%),
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px) 0 0 / 33.33% 100%,
+        linear-gradient(0deg, rgba(255,255,255,.055) 1px, transparent 1px) 0 0 / 100% 25%,
+        linear-gradient(180deg, #171717 0%, #080808 45%, #020202 100%);
+    }
+    .real-camera-scene::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, transparent 0 16%, rgba(255,255,255,.05) 16% 17%, transparent 17% 48%, rgba(255,255,255,.04) 48% 49%, transparent 49% 82%, rgba(255,255,255,.04) 82% 83%, transparent 83%),
+        radial-gradient(circle at 50% 45%, transparent 0 34%, rgba(0,0,0,.35) 72%);
+      pointer-events: none;
+    }
+    .real-camera-scene::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), transparent 18%),
+        radial-gradient(circle at 50% 45%, transparent 0 42%, rgba(0,0,0,.58) 100%);
+      pointer-events: none;
+      z-index: 5;
+    }
+    .shelf-rail {
+      position: absolute;
+      left: 9%;
+      right: 9%;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,.08));
+      box-shadow: 0 10px 22px rgba(0,0,0,.55), 0 1px 0 rgba(255,255,255,.25) inset;
+      z-index: 1;
+    }
+    .shelf-rail.top { top: 36%; }
+    .shelf-rail.middle { top: 62%; }
+    .shelf-rail.bottom { top: 78%; }
+    .real-pack {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, #fff, #f2f2f2);
+      border: 1px solid rgba(255,255,255,.72);
+      box-shadow: 0 16px 30px rgba(0,0,0,.58), 0 1px 0 rgba(255,255,255,.85) inset;
+      z-index: 3;
+    }
+    .real-pack::after {
+      content: "";
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      bottom: -10px;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.48);
+      filter: blur(7px);
+      z-index: -1;
+    }
+    .real-pack img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: saturate(1.02) contrast(1.04);
+    }
+    .count-real .real-pack {
+      width: 58px;
+      height: 96px;
+      padding: 4px;
+      border-radius: 9px 9px 6px 6px;
+    }
+    .count-real .rp1 { left: 16%; top: 19%; transform: rotate(-2deg); }
+    .count-real .rp2 { left: 38%; top: 18%; width: 62px; transform: rotate(1deg); }
+    .count-real .rp3 { left: 62%; top: 20%; height: 90px; transform: rotate(.5deg); }
+    .count-real .rp4 { left: 21%; top: 47%; height: 100px; transform: rotate(1deg); }
+    .count-real .rp5 { left: 43%; top: 46%; width: 66px; height: 102px; transform: rotate(-1.5deg); }
+    .count-real .rp6 { left: 62%; top: 48%; height: 96px; transform: rotate(.75deg); }
+    .barcode-real .real-pack:not(.scan-pack) {
+      width: 52px;
+      height: 86px;
+      padding: 4px;
+      border-radius: 8px 8px 5px 5px;
+      opacity: .72;
+      filter: blur(.15px);
+    }
+    .barcode-real .rp1 { left: 15%; top: 18%; transform: rotate(-3deg); }
+    .barcode-real .rp2 { right: 16%; top: 19%; transform: rotate(2deg); }
+    .barcode-real .rp3 { left: 18%; top: 58%; transform: rotate(1deg); }
+    .barcode-real .rp4 { right: 18%; top: 58%; transform: rotate(-1deg); }
+    .scan-pack {
+      left: 28%;
+      top: 26%;
+      width: 158px;
+      height: 206px;
+      border-radius: 12px 12px 7px 7px;
+      padding: 8px;
+      transform: rotate(-.5deg);
+      z-index: 4;
+    }
+    .scan-pack img {
+      width: 82%;
+      height: 82%;
+      align-self: start;
+      justify-self: center;
+    }
+    .attached-barcode {
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      top: 55%;
+      min-height: 58px;
+      padding: 8px 10px 7px;
+      border-radius: 7px;
+      background: #fff;
+      box-shadow: 0 8px 20px rgba(0,0,0,.38);
+      display: grid;
+      gap: 5px;
+      align-content: center;
+    }
+    .attached-barcode .barcode-lines { height: 24px; }
+    .attached-barcode .barcode-number { font-size: 8px; }
+    .camera-focus-ring {
+      position: absolute;
+      left: 20%;
+      right: 20%;
+      top: 23%;
+      height: 54%;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 14px;
+      box-shadow: 0 0 0 1px rgba(0,0,0,.28) inset;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .scan-mask {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,.05);
+      pointer-events: none;
+      z-index: 4;
+    }
+    .scan-zone {
+      position: relative;
+      width: 80%;
+      height: 36%;
+      box-shadow: 0 0 0 9999px rgba(0,0,0,.55);
+    }
+    .scan-corner {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border-color: #fff;
+      border-style: solid;
+    }
+    .scan-corner.tl { top: 0; left: 0; border-width: 3px 0 0 3px; }
+    .scan-corner.tr { top: 0; right: 0; border-width: 3px 3px 0 0; }
+    .scan-corner.bl { bottom: 0; left: 0; border-width: 0 0 3px 3px; }
+    .scan-corner.br { bottom: 0; right: 0; border-width: 0 3px 3px 0; }
+    .scan-line {
+      position: absolute;
+      top: 10%;
+      left: 8px;
+      right: 8px;
+      height: 2px;
+      background: #fff;
+      opacity: .92;
+      animation: barcodeScan 2s ease-in-out infinite;
+      will-change: transform;
+    }
+    .quality-pill {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 28px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(0, 165, 0, .92);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      z-index: 3;
+      white-space: nowrap;
+    }
+    .orange-chip {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+      position: relative;
+      z-index: 4;
+    }
+    .orange-chip span {
+      display: inline-grid;
+      place-items: center;
+      min-height: 24px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: #f97316;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .detected {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      min-height: 40px;
+      border-radius: 8px;
+      background: rgba(0,0,0,.7);
+      color: #4ade80;
+      display: grid;
+      place-items: center;
+      font: 800 18px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    .lookup-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.58);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      text-align: center;
+      opacity: 0;
+      animation: lookupFlash 8s ease-in-out infinite;
+    }
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border-radius: 999px;
+      border: 4px solid rgba(255,255,255,.9);
+      border-top-color: transparent;
+      animation: spin .9s linear infinite;
+      margin-bottom: 12px;
+    }
+
+    .product-photo {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: contain;
+      border-radius: 12px;
+      border: 1px solid #d1d5db;
+      background: #fff;
+    }
+    .photo-label { margin: 12px 0 0; font-size: 18px; font-weight: 800; text-align: center; }
+    .barcode-box {
+      margin: 16px 0 24px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      background: #f9fafb;
+      padding: 12px 16px;
+      text-align: center;
+    }
+    .barcode-box .title { margin: 0 0 6px; color: var(--muted); font-size: 14px; }
+    .barcode-box .code { margin: 0; font: 700 18px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .barcode-box .name { margin: 7px 0 0; font-size: 14px; line-height: 1.35; font-weight: 800; color: #1f2937; }
+    .button-stack { display: grid; gap: 12px; }
+
+    .capture-button {
+      width: 80px;
+      height: 80px;
+      margin: 24px auto 0;
+      border-radius: 999px;
+      background: var(--primary);
+      border: 4px solid #fff;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, .18);
+      display: grid;
+      place-items: center;
+      animation: capturePulse 2.4s ease-in-out infinite;
+    }
+    .capture-button::after {
+      content: "";
+      width: 60px;
+      height: 60px;
+      border-radius: 999px;
+      background: var(--primary);
+      border: 2px solid rgba(255,255,255,.36);
+    }
+    .detect-dot {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      margin: -7px 0 0 -7px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.8);
+      background: #22c55e;
+      box-shadow: 0 1px 5px rgba(0,0,0,.22);
+      z-index: 4;
+    }
+
+    .found-label { text-align: center; color: #4b5563; font-size: 14px; margin: 18px 0 12px; }
+    .stock-card {
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 16px;
+      background: #fff;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .stock-card img {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      background: #f3f4f6;
+      object-fit: contain;
+      border: 1px solid #f3f4f6;
+    }
+    .stock-card h3 { margin: 2px 0 0; font-size: 14px; line-height: 1.35; }
+    .chevron { margin-left: auto; color: #9ca3af; }
+    .counter {
+      margin-top: 20px;
+      border-radius: 8px;
+      background: #f9fafb;
+      padding: 24px;
+      text-align: center;
+    }
+    .counter-label { color: #4b5563; font-size: 14px; font-weight: 650; margin-bottom: 16px; }
+    .counter-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+    }
+    .round {
+      width: 48px;
+      height: 48px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      color: #374151;
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      font-weight: 800;
+    }
+    .qty { font-size: 62px; line-height: .9; font-weight: 800; min-width: 74px; }
+    .unit { color: var(--muted); margin-top: 8px; font-size: 14px; }
+    .warning {
+      margin: 20px auto 0;
+      width: max-content;
+      max-width: 100%;
+      min-height: 38px;
+      border: 1px solid #fca5a5;
+      border-radius: 999px;
+      background: #fef2f2;
+      color: #dc2626;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .summary-card {
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(15,23,42,.06);
+      display: flex;
+      gap: 16px;
+    }
+    .summary-card img {
+      width: 80px;
+      height: 80px;
+      flex: 0 0 80px;
+      object-fit: contain;
+      border: 1px solid #f3f4f6;
+      border-radius: 8px;
+      background: #f3f4f6;
+    }
+    .summary-card h3 { margin: 4px 0 8px; font-size: 14px; line-height: 1.35; }
+    .summary-card .amount { color: var(--primary); font-size: 18px; font-weight: 800; }
+    .meta-box {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fff;
+      display: grid;
+      gap: 9px;
+    }
+    .meta-row { display: flex; justify-content: space-between; gap: 14px; font-size: 14px; }
+    .meta-row span:first-child { color: var(--muted); }
+    .meta-row span:last-child { font-weight: 800; text-align: right; }
+    .fixed-actions {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 12px 16px 18px;
+      border-top: 1px solid var(--border);
+      background: #fff;
+      display: grid;
+      gap: 10px;
+      z-index: 11;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+    .filter-pill {
+      height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      color: #4b5563;
+      background: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+    }
+    .filter-pill.active { border: 2px solid var(--primary); color: var(--primary); background: #fff7ed; }
+    .stats-card {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(15,23,42,.06);
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+    .stat { padding: 14px; text-align: center; }
+    .stat + .stat { border-left: 1px solid var(--border); }
+    .stat-value { color: var(--primary); font-size: 22px; font-weight: 800; }
+    .stat-label { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .review-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 1px 3px rgba(15,23,42,.06);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .review-card img {
+      width: 72px;
+      height: 72px;
+      border-radius: 8px;
+      border: 1px solid #f3f4f6;
+      background: #f3f4f6;
+      object-fit: contain;
+    }
+    .review-info { flex: 1; min-width: 0; }
+    .review-info h3 { margin: 2px 0 6px; font-size: 13px; line-height: 1.3; font-weight: 800; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 5px; }
+    .tiny-pill {
+      min-height: 22px;
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: #fff7ed;
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .delete-button {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: #fee2e2;
+      color: #dc2626;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+    }
+    .send-panel {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 64px;
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      background: #fff;
+      z-index: 10;
+    }
+    .sent-date { margin: 0 0 10px; color: var(--muted); font-size: 13px; font-weight: 700; }
+    .folder-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 1px 3px rgba(15,23,42,.06);
+      margin-bottom: 12px;
+    }
+    .folder-top { display: flex; align-items: center; gap: 10px; }
+    .folder-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: #fff7ed;
+      color: var(--primary);
+      display: grid;
+      place-items: center;
+    }
+    .folder-title { margin: 0; font-size: 15px; font-weight: 800; }
+    .folder-sub { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+    .folder-stats {
+      margin-top: 12px;
+      border-top: 1px solid #f3f4f6;
+      padding-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      color: #4b5563;
+      font-size: 13px;
+    }
+
+    .modal-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 31;
+      background: rgba(0,0,0,.5);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .error-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 16px;
+      border-radius: 999px;
+      background: #fee2e2;
+      color: #ef4444;
+      display: grid;
+      place-items: center;
+    }
+    .error-message {
+      margin: 0 0 22px;
+      text-align: center;
+      font-size: 16px;
+      line-height: 1.45;
+      font-weight: 700;
+      color: #1f2937;
+      white-space: pre-line;
+    }
+    .floating-label {
+      position: relative;
+      margin-bottom: 14px;
+    }
+    .floating-label label {
+      position: absolute;
+      top: -8px;
+      left: 12px;
+      padding: 0 4px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 12px;
+      z-index: 1;
+    }
+    .floating-label .input { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; padding-right: 40px; }
+    .input-alert {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      width: 20px;
+      height: 20px;
+      transform: translateY(-50%);
+      border-radius: 999px;
+      background: var(--danger);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    @keyframes barcodeScan {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(116px); }
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes lookupFlash {
+      0%, 38% { opacity: 0; }
+      42%, 54% { opacity: 1; }
+      58%, 100% { opacity: 0; }
+    }
+    body.video-export .scan-line {
+      animation: none;
+      transform: translateY(var(--scan-y, 0px));
+      height: 3px;
+      z-index: 20;
+      box-shadow: 0 0 0 1px rgba(0,0,0,.45), 0 0 9px rgba(255,255,255,.95);
+    }
+    body.video-export .lookup-overlay {
+      animation: none;
+      opacity: var(--lookup-opacity, 0);
+    }
+    body.video-export .spinner {
+      animation: none;
+    }
+    @keyframes capturePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(.94); }
+    }
+
+    @media (max-width: 1040px) {
+      .review-shell { grid-template-columns: 1fr; padding: 16px; }
+      .side-panel { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="review-shell">
+    <aside class="side-panel">
+      <div class="brand-lockup">
+        <img src="assets/baksters-heart.png" alt="Baksters logo" />
+        <div>
+          <div class="brand-name">BAKSTERS Counting</div>
+          <div class="brand-sub">Stock Counting</div>
+        </div>
+      </div>
+      <div class="flow-list" id="flowList"></div>
+    </aside>
+    <main class="stage">
+      <div class="app" id="app" aria-live="polite"></div>
+    </main>
+    <aside class="side-panel video-panel">
+      <video
+        class="walkthrough-video"
+        src="assets/original-ui/baksters-original-ui-walkthrough.mp4"
+        poster="assets/original-ui/screens/01-entry.png"
+        autoplay
+        muted
+        loop
+        playsinline
+      ></video>
+    </aside>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const captureMode = params.get('capture') === '1';
+    const recordMode = params.get('record') === '1';
+    if (captureMode) document.body.classList.add('capture');
+    if (params.has('scanY')) {
+      document.body.classList.add('video-export');
+      const scanY = Number(params.get('scanY') || 0);
+      const lookupOpacity = Number(params.get('lookupOpacity') || 0);
+      document.documentElement.style.setProperty('--scan-y', `${Math.max(0, Math.min(116, scanY))}px`);
+      document.documentElement.style.setProperty('--lookup-opacity', `${Math.max(0, Math.min(1, lookupOpacity))}`);
+    }
+
+    const img = {
+      logo: 'assets/baksters-heart.png',
+      glow: 'assets/original-ui/product-jolly-white.png',
+      cleanser: 'assets/original-ui/product-jolly-white.png',
+      mask: 'assets/original-ui/product-jolly-white.png',
+      serum: 'assets/original-ui/product-jolly-white.png',
+      jolly: 'assets/original-ui/product-jolly-white.png',
+      cameraBarcode: 'assets/original-ui/camera-barcode.png',
+      cameraCounting: 'assets/original-ui/camera-counting.png'
+    };
+
+    const products = [
+      { sku: '7201200', name: 'Jolly Hydrating Hand Sanitizer Refill 160 ml', img: img.jolly, qty: 5, location: 'สต็อกหน้าร้าน' },
+      { sku: '2072012000000', name: 'Jolly Sweet Blossoms Refill Pack 160 ml', img: img.jolly, qty: 7, location: 'สต็อกหน้าร้าน' },
+      { sku: 'JOLLY-REFILL-160', name: 'Jolly Self Love Self Care Alcohol 75%', img: img.jolly, qty: 5, location: 'สต็อกหลังร้าน' },
+      { sku: 'JOLLY-PACK-1', name: 'Jolly Hand Sanitizer Refill Pack 1', img: img.jolly, qty: 9, location: 'สต็อกหน้าร้าน' }
+    ];
+
+    const screens = [
+      ['entry', 'เข้าสู่ระบบ', 'โลโก้และ LINE login'],
+      ['register', 'ลงทะเบียน', 'Bottom sheet profile'],
+      ['approval', 'ยืนยันข้อมูล', 'Registration complete'],
+      ['home', 'หน้าแรก', 'รายการสินค้าที่ต้องนับ'],
+      ['barcode', 'สแกนบาร์โค้ด', 'Animated scanner'],
+      ['match', 'ยืนยันสินค้า', 'Barcode/product match'],
+      ['count', 'ถ่ายภาพสินค้า', 'Counting camera'],
+      ['verify', 'ตรวจสอบผลิตภัณฑ์', 'Detected quantity'],
+      ['save', 'ตรวจสอบรายละเอียด', 'Save or send'],
+      ['drafts', 'บันทึกชั่วคราว', 'Cart and send panel'],
+      ['sent', 'สต็อกที่ส่งแล้ว', 'Sent result folder'],
+      ['exceptions', 'ข้อยกเว้น', 'Manual barcode search']
+    ];
+
+    let current = params.get('screen') || 'entry';
+    if (!screens.some(([key]) => key === current)) current = 'entry';
+
+    const icon = {
+      back: '<svg class="icon" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>',
+      close: '<svg class="icon" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
+      home: '<svg class="icon" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>',
+      cart: '<svg class="icon" viewBox="0 0 24 24"><path d="M6 7h15l-2 9H8L6 3H3"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>',
+      send: '<svg class="icon" viewBox="0 0 24 24"><path d="M3 10.5 21 3l-7.5 18-3-7.5L3 10.5z"/><path d="m10.5 13.5 5-5"/></svg>',
+      user: '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.8-4 5-6 8-6s6.2 2 8 6"/></svg>',
+      search: '<svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>',
+      check: '<svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>',
+      clock: '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+      trash: '<svg class="icon" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m7 6 1 15h8l1-15"/></svg>',
+      folder: '<svg class="icon" viewBox="0 0 24 24"><path d="M3 7h7l2 2h9v10H3z"/></svg>',
+      alert: '<svg class="icon" viewBox="0 0 24 24"><path d="M12 8v5"/><path d="M12 17h.01"/><path d="M10.3 3.9 2.6 18a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>',
+      x: '<svg class="icon" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>'
+    };
+
+    function header(title, opts = {}) {
+      return `
+        <div class="header">
+          ${opts.back ? `<button class="header-icon left" aria-label="Back">${icon.back}</button>` : ''}
+          <div class="header-title">${title}</div>
+          ${opts.close ? `<button class="header-icon right" aria-label="Close">${icon.close}</button>` : ''}
+        </div>
+      `;
+    }
+
+    function bottomNav(active) {
+      const items = [
+        ['home', 'หน้าแรก', icon.home, 'home'],
+        ['drafts', 'บันทึกชั่วคราว', icon.cart, 'drafts'],
+        ['sent', 'สต็อกที่ส่งแล้ว', icon.send, 'sent'],
+        ['myinfo', 'ข้อมูลของฉัน', icon.user, 'entry']
+      ];
+      return `<nav class="bottom-nav">${items.map(([key, label, svg, target]) => `
+        <button class="nav-item ${active === key ? 'active' : ''}" data-screen="${target}">
+          ${key === 'drafts' ? '<span class="badge">3</span>' : ''}
+          ${svg}<span>${label}</span>
+        </button>
+      `).join('')}</nav>`;
+    }
+
+    function productRow(product, opts = {}) {
+      return `
+        <button class="product-row ${opts.locked ? 'locked' : ''} ${opts.selected ? 'selected' : ''}" data-screen="barcode">
+          ${opts.locked ? '<span class="lock-chip">กำลังนับอยู่</span>' : ''}
+          <img class="product-img" src="${product.img}" alt="${product.name}" />
+          <div class="product-info">
+            <p class="sku">SKU: ${product.sku}</p>
+            <p class="product-name">${product.name}</p>
+            <span class="row-action">แจ้งสินค้าหมด</span>
+          </div>
+        </button>
+      `;
+    }
+
+    function cameraProducts(includeBarcode = false) {
+      const barcode = includeBarcode ? `
+        <div class="barcode-card">
+          <div class="barcode-lines"></div>
+          <div class="barcode-number">885102301001</div>
+        </div>
+      ` : '';
+      return `
+        <div class="camera-scene">
+          <div class="camera-shelf one"></div>
+          <div class="camera-shelf two"></div>
+          <div class="camera-shelf three"></div>
+          <img class="mock-product p1" src="${img.glow}" alt="" />
+          <img class="mock-product p2" src="${img.cleanser}" alt="" />
+          <img class="mock-product p3" src="${img.mask}" alt="" />
+          <img class="mock-product p4" src="${img.glow}" alt="" />
+          <img class="mock-product p5" src="${img.serum}" alt="" />
+          <img class="mock-product p6" src="${img.glow}" alt="" />
+          ${barcode}
+        </div>
+      `;
+    }
+
+    function realCameraProducts(mode = 'count') {
+      const isBarcode = mode === 'barcode';
+      if (isBarcode) {
+        return `
+          <div class="real-camera-scene barcode-real">
+            <div class="shelf-rail top"></div>
+            <div class="shelf-rail middle"></div>
+            <div class="shelf-rail bottom"></div>
+            <div class="camera-focus-ring"></div>
+            <div class="real-pack rp1"><img src="${img.cleanser}" alt="" /></div>
+            <div class="real-pack rp2"><img src="${img.mask}" alt="" /></div>
+            <div class="real-pack rp3"><img src="${img.serum}" alt="" /></div>
+            <div class="real-pack rp4"><img src="${img.glow}" alt="" /></div>
+            <div class="real-pack scan-pack">
+              <img src="${img.glow}" alt="" />
+              <div class="attached-barcode">
+                <div class="barcode-lines"></div>
+                <div class="barcode-number">885102301001</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="real-camera-scene count-real">
+          <div class="shelf-rail top"></div>
+          <div class="shelf-rail middle"></div>
+          <div class="shelf-rail bottom"></div>
+          <div class="real-pack rp1"><img src="${img.glow}" alt="" /></div>
+          <div class="real-pack rp2"><img src="${img.cleanser}" alt="" /></div>
+          <div class="real-pack rp3"><img src="${img.mask}" alt="" /></div>
+          <div class="real-pack rp4"><img src="${img.glow}" alt="" /></div>
+          <div class="real-pack rp5"><img src="${img.serum}" alt="" /></div>
+          <div class="real-pack rp6"><img src="${img.glow}" alt="" /></div>
+        </div>
+      `;
+    }
+
+    function photoCamera(mode = 'count') {
+      if (mode === 'barcode') {
+        return `<img class="camera-photo" src="${img.cameraBarcode}" alt="Real barcode scan camera view" />`;
+      }
+      return `<img class="camera-photo" src="${img.cameraCounting}" alt="Real counting camera view" />`;
+    }
+
+    function entryScreen() {
+      return `
+        <section class="page">
+          <div class="login-screen">
+            <img class="logo-main" src="${img.logo}" alt="Baksters" />
+            <h1 class="login-title">ระบบนับสต็อก</h1>
+            <div class="login-brand">BAKSTERS COUNTING</div>
+            <div class="login-actions">
+              <button class="btn line square" data-screen="register">เข้าสู่ระบบด้วย LINE</button>
+              <button class="btn outline square" data-screen="home">ดูตัวอย่าง Flow</button>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function registerScreen() {
+      return `
+        <section class="page">
+          <div class="login-screen">
+            <img class="logo-main" src="${img.logo}" alt="Baksters" />
+            <h1 class="login-title">ระบบนับสต็อก</h1>
+          </div>
+          <div class="sheet-backdrop">
+            <div class="bottom-sheet register-sheet">
+              <h2 class="sheet-title">ลงทะเบียนใช้งาน</h2>
+              <p class="sheet-desc">กรุณากรอกข้อมูลเพื่อเริ่มใช้งานระบบ</p>
+              <div class="avatar"><img src="${img.logo}" alt="Baksters" /></div>
+              <div class="form">
+                <div class="field"><label class="label">ชื่อ LINE</label><input class="input" value="BA Fern" /></div>
+                <div class="field"><label class="label">เบอร์โทรศัพท์</label><input class="input" value="0812345678" /></div>
+                <div class="field"><label class="label">อีเมล</label><input class="input" value="fern.ba@baksters.com" /></div>
+                <div class="field"><label class="label">สาขา</label><input class="input" value="Central Rama 9" /></div>
+                <button class="btn primary" data-screen="approval">ยืนยัน</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function approvalScreen() {
+      return `
+        <section class="page">
+          <div class="approval">
+            <div class="status-icon">${icon.check}</div>
+            <h2>ลงทะเบียนสำเร็จ</h2>
+            <p>โปรไฟล์ได้รับการอัปเดตแล้ว<br />คุณสามารถเริ่มนับสต็อก Baksters ได้ทันที</p>
+            <button class="btn primary" data-screen="home">เริ่มนับสต็อก</button>
+          </div>
+        </section>
+      `;
+    }
+
+    function homeScreen() {
+      return `
+        <section class="page gray">
+          ${header('รายการสินค้าที่ต้องนับสต็อก')}
+          <div class="tabs">
+            <button class="tab active">สต็อกหน้าร้าน</button>
+            <button class="tab">สต็อกหลังร้าน</button>
+          </div>
+          <div class="content nav-space" style="padding-top:12px">
+            <div class="search-wrap">${icon.search}<input class="search" value="" placeholder="ค้นหาสินค้า / SKU" /></div>
+            <div class="list-meta"><span>รายการทั้งหมด 4 รายการ</span><span class="location-pill">สต็อกหน้าร้าน</span></div>
+            <div class="product-list">
+              ${productRow(products[0], { selected: true })}
+              ${productRow(products[1])}
+              ${productRow(products[2], { locked: true })}
+              ${productRow(products[3])}
+            </div>
+          </div>
+          <div class="deadline">${icon.clock}<span>หมดเวลาการนับ: 02:14:35</span></div>
+          ${bottomNav('home')}
+        </section>
+      `;
+    }
+
+    function barcodeScreen() {
+      return `
+        <section class="page">
+          ${header('สแกนบาร์โค้ด', { back: true, close: true })}
+          <div class="content tight">
+            <div class="camera-box photo-camera photo-barcode">
+              ${photoCamera('barcode')}
+              <div class="quality-pill">${icon.check}<span>คุณภาพสมบูรณ์แบบ</span></div>
+              <div class="scan-mask">
+                <div class="scan-zone">
+                  <div class="scan-corner tl"></div><div class="scan-corner tr"></div>
+                  <div class="scan-corner bl"></div><div class="scan-corner br"></div>
+                  <div class="scan-line"></div>
+                </div>
+              </div>
+              <div class="lookup-overlay"><div class="spinner"></div><strong>กำลังค้นหาสินค้า...</strong></div>
+            </div>
+            <div class="orange-chip"><span>สแกนบาร์โค้ด</span></div>
+          </div>
+        </section>
+      `;
+    }
+
+    function matchScreen() {
+      const p = products[0];
+      return `
+        <section class="page">
+          ${header('สแกนบาร์โค้ด', { back: true, close: true })}
+          <div class="content">
+            <img class="product-photo" src="${p.img}" alt="${p.name}" />
+            <p class="photo-label">รูปตัวอย่างการถ่ายภาพนับสินค้า</p>
+            <div class="barcode-box">
+              <p class="title">เลขบาร์โค้ด</p>
+              <p class="code">${p.sku}</p>
+              <p class="name">${p.name}</p>
+            </div>
+            <div class="button-stack">
+              <button class="btn primary" data-screen="count">ยืนยัน</button>
+              <button class="btn outline" data-screen="barcode">สแกนบาร์โค้ดอีกครั้ง</button>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function countScreen() {
+      return `
+        <section class="page">
+          ${header('ถ่ายภาพสินค้า', { back: true, close: true })}
+          <div class="content">
+            <div class="camera-box photo-camera photo-count">
+              ${photoCamera('count')}
+              <div class="quality-pill">${icon.check}<span>คุณภาพรูปภาพดี</span></div>
+              <div class="orange-chip" style="position:absolute;bottom:12px;left:0;right:0;margin:0"><span>การนับสต็อก</span></div>
+            </div>
+            <button class="capture-button" aria-label="Capture" data-screen="verify"></button>
+          </div>
+        </section>
+      `;
+    }
+
+    function verifyScreen() {
+      const p = products[0];
+      return `
+        <section class="page">
+          ${header('ตรวจสอบผลิตภัณฑ์', { back: true, close: true })}
+          <div class="content action-space">
+            <div class="camera-box photo-camera photo-verify" style="aspect-ratio:1;border:1px solid #e5e7eb;background:#111">
+              ${photoCamera('count')}
+              <span class="detect-dot" style="left:23%;top:29%"></span>
+              <span class="detect-dot" style="left:51%;top:28%"></span>
+              <span class="detect-dot" style="left:80%;top:29%"></span>
+              <span class="detect-dot" style="left:36%;top:70%"></span>
+              <span class="detect-dot" style="left:66%;top:69%"></span>
+            </div>
+            <p class="found-label">พบสินค้า 5 ชิ้น</p>
+            <div class="stock-card">
+              <img src="${p.img}" alt="${p.name}" />
+              <div><p class="sku">SKU: ${p.sku}</p><h3>${p.name}</h3></div>
+              <div class="chevron">⌄</div>
+            </div>
+            <div class="counter">
+              <div class="counter-label">จำนวนที่ตรวจสอบ</div>
+              <div class="counter-row"><button class="round">−</button><div class="qty">5</div><button class="round">+</button></div>
+              <div class="unit">หน่วย</div>
+            </div>
+            <div class="warning">${icon.alert}<span>กรุณาตรวจสอบการนับและ SKU</span></div>
+          </div>
+          <div class="fixed-actions"><button class="btn primary" data-screen="save">ยืนยัน</button></div>
+        </section>
+      `;
+    }
+
+    function saveScreen() {
+      const p = products[0];
+      return `
+        <section class="page">
+          ${header('ตรวจสอบรายละเอียด', { back: true, close: true })}
+          <div class="content action-space">
+            <div class="summary-card">
+              <img src="${p.img}" alt="${p.name}" />
+              <div>
+                <p class="sku">SKU: ${p.sku}</p>
+                <h3>${p.name}</h3>
+                <div class="amount">5 หน่วย</div>
+              </div>
+            </div>
+            <div class="meta-box" style="margin-top:18px">
+              <div class="meta-row"><span>สถานที่:</span><span>สต็อกหน้าร้าน</span></div>
+              <div class="meta-row"><span>คุณภาพรูปภาพ:</span><span>คุณภาพสมบูรณ์แบบ</span></div>
+              <div class="meta-row"><span>ความแม่นยำ:</span><span>พบทั้ง 100%</span></div>
+              <div class="meta-row"><span>BA:</span><span>BA Fern</span></div>
+            </div>
+          </div>
+          <div class="fixed-actions">
+            <button class="btn outline" data-screen="drafts">บันทึกชั่วคราว</button>
+            <button class="btn primary" data-screen="sent">ส่งยอดนับสต็อกให้แอดมิน</button>
+          </div>
+        </section>
+      `;
+    }
+
+    function draftsScreen() {
+      return `
+        <section class="page gray">
+          ${header('บันทึกชั่วคราว')}
+          <div class="filter-row"><button class="filter-pill active">ทั้งหมด</button><button class="filter-pill">สต็อกหน้าร้าน</button><button class="filter-pill">สต็อกหลังร้าน</button></div>
+          <div class="content nav-space" style="padding-top:14px">
+            <div class="stats-card"><div class="stat"><div class="stat-value">3</div><div class="stat-label">รายการทั้งหมด</div></div><div class="stat"><div class="stat-value">21</div><div class="stat-label">หน่วยรวม</div></div></div>
+            ${draftCard(products[0], 5)}
+            ${draftCard(products[1], 7)}
+            ${draftCard(products[3], 9)}
+          </div>
+          <div class="send-panel"><button class="btn primary" data-screen="sent">ส่งยอดนับสต็อกให้แอดมิน</button></div>
+          ${bottomNav('drafts')}
+        </section>
+      `;
+    }
+
+    function draftCard(product, qty) {
+      return `
+        <div class="review-card">
+          <img src="${product.img}" alt="${product.name}" />
+          <div class="review-info">
+            <p class="sku">SKU: ${product.sku}</p>
+            <h3>${product.name}</h3>
+            <div class="tag-row"><span class="tiny-pill">${qty} หน่วย</span><span class="tiny-pill">${product.location}</span></div>
+          </div>
+          <button class="delete-button">${icon.trash}</button>
+        </div>
+      `;
+    }
+
+    function sentScreen() {
+      return `
+        <section class="page gray">
+          ${header('สต็อกที่ส่งแล้ว')}
+          <div class="content nav-space">
+            <p class="sent-date">วันนี้</p>
+            <div class="folder-card">
+              <div class="folder-top">
+                <div class="folder-icon">${icon.folder}</div>
+                <div><p class="folder-title">ส่งยอดนับ Baksters สำเร็จ</p><p class="folder-sub">Central Rama 9 · BA Fern</p></div>
+              </div>
+              <div class="folder-stats"><span>3 รายการ</span><span>21 หน่วย</span></div>
+            </div>
+            <div class="folder-card">
+              <div class="folder-top">
+                <div class="folder-icon">${icon.check}</div>
+                <div><p class="folder-title">ผลิตภัณฑ์ได้ถูกส่งแล้ว</p><p class="folder-sub">14:32 · สต็อกหน้าร้าน</p></div>
+              </div>
+              <div class="folder-stats"><span>สถานะ</span><span style="color:var(--success);font-weight:800">สำเร็จ</span></div>
+            </div>
+          </div>
+          ${bottomNav('sent')}
+        </section>
+      `;
+    }
+
+    function exceptionsScreen() {
+      return `
+        <section class="page">
+          ${header('สแกนบาร์โค้ด', { back: true, close: true })}
+          <div class="content tight">
+            <div class="camera-box">
+              ${cameraProducts(true)}
+              <div class="detected">885102399999</div>
+            </div>
+            <div class="orange-chip"><span>สแกนบาร์โค้ด</span></div>
+          </div>
+          <div class="modal-bg">
+            <div class="bottom-sheet">
+              <div class="error-icon">${icon.x}</div>
+              <p class="error-message">เลขบาร์โค้ดไม่ตรงกับที่เลือกจาก<br>"รายการสินค้าที่ต้องนับสต็อก"</p>
+              <div class="floating-label">
+                <label>ค้นหาเลขบาร์โค้ด</label>
+                <input class="input" value="" placeholder="เลขบาร์โค้ด..." />
+                <span class="input-alert">!</span>
+              </div>
+              <p style="margin:-8px 0 12px 12px;color:#ef4444;font-size:12px">ไม่พบเลขบาร์โค้ด</p>
+              <div class="button-stack">
+                <button class="btn primary">ค้นหา</button>
+                <button class="btn outline" data-screen="barcode">สแกนบาร์โค้ดอีกครั้ง</button>
+                <button style="color:#4b5563;text-decoration:underline;font-size:14px;padding:8px">ยกเลิก</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    const renderers = {
+      entry: entryScreen,
+      register: registerScreen,
+      approval: approvalScreen,
+      home: homeScreen,
+      barcode: barcodeScreen,
+      match: matchScreen,
+      count: countScreen,
+      verify: verifyScreen,
+      save: saveScreen,
+      drafts: draftsScreen,
+      sent: sentScreen,
+      exceptions: exceptionsScreen
+    };
+
+    function renderFlow() {
+      const list = document.getElementById('flowList');
+      if (!list) return;
+      list.innerHTML = screens.map(([key, name, desc], i) => `
+        <button class="flow-button ${key === current ? 'active' : ''}" data-screen="${key}">
+          <span class="flow-index">${String(i + 1).padStart(2, '0')}</span>
+          <span class="flow-text"><span class="flow-name">${name}</span><span class="flow-desc">${desc}</span></span>
+        </button>
+      `).join('');
+    }
+
+    function setScreen(key, push = true) {
+      if (!renderers[key]) return;
+      current = key;
+      document.getElementById('app').innerHTML = renderers[key]();
+      renderFlow();
+      if (push && !captureMode && !recordMode) {
+        const next = new URL(window.location.href);
+        next.searchParams.set('screen', key);
+        window.history.replaceState({}, '', next);
+      }
+      bind();
+    }
+
+    function bind() {
+      document.querySelectorAll('[data-screen]').forEach((button) => {
+        button.addEventListener('click', () => setScreen(button.getAttribute('data-screen')));
+      });
+    }
+
+    setScreen(current, false);
+
+    if (recordMode && !params.get('screen')) {
+      let idx = 0;
+      setScreen(screens[idx][0], false);
+      setInterval(() => {
+        idx = (idx + 1) % screens.length;
+        setScreen(screens[idx][0], false);
+      }, 2200);
+    } else if (recordMode && params.get('screen') === 'barcode') {
+      setInterval(() => setScreen('barcode', false), 2400);
+    }
+  </script>
+</body>
+</html>

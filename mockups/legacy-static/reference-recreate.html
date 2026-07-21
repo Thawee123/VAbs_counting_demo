@@ -1,0 +1,1900 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Baksters Counting Reference Recreate</title>
+  <style>
+    :root {
+      --red: #c91830;
+      --coral: #ee4639;
+      --ink: #18202a;
+      --muted: #65717f;
+      --line: #e3e8ee;
+      --panel: #ffffff;
+      --bg: #f4f7fa;
+      --teal: #168c84;
+      --amber: #f4a929;
+      --green: #1d9a63;
+      --navy: #243b53;
+      --shadow: 0 18px 50px rgba(24, 32, 42, 0.12);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(135deg, rgba(201, 24, 48, 0.08), rgba(22, 140, 132, 0.07)),
+        var(--bg);
+      color: var(--ink);
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(250px, 300px) minmax(420px, 1fr) minmax(260px, 340px);
+      gap: 20px;
+      padding: 22px;
+    }
+
+    .side,
+    .result-panel,
+    .phone-wrap {
+      min-width: 0;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .brand-row img {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+    }
+
+    .brand-name {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 0;
+      line-height: 1;
+    }
+
+    .brand-sub {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 3px;
+    }
+
+    .flow-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .flow-button {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.82);
+      border-radius: 8px;
+      padding: 10px 12px;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+    }
+
+    .flow-button:hover {
+      border-color: rgba(201, 24, 48, 0.45);
+      background: white;
+    }
+
+    .flow-button.active {
+      background: white;
+      border-color: var(--red);
+      box-shadow: 0 10px 22px rgba(201, 24, 48, 0.11);
+      transform: translateX(2px);
+    }
+
+    .flow-index {
+      display: inline-flex;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      background: #eef3f7;
+      color: var(--navy);
+      font-size: 12px;
+      font-weight: 800;
+      margin-right: 8px;
+    }
+
+    .flow-button.active .flow-index {
+      background: var(--red);
+      color: white;
+    }
+
+    .flow-title {
+      font-weight: 760;
+      font-size: 14px;
+    }
+
+    .flow-desc {
+      margin: 5px 0 0 30px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .phone-wrap {
+      display: grid;
+      place-items: start center;
+      gap: 14px;
+    }
+
+    .stage-title {
+      width: min(100%, 660px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 0 4px;
+    }
+
+    .stage-title h1 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .stage-title p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .stage-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .stage-actions button,
+    .primary-button,
+    .secondary-button {
+      border-radius: 8px;
+      border: 1px solid transparent;
+      padding: 10px 13px;
+      cursor: pointer;
+      font-weight: 760;
+      min-height: 40px;
+    }
+
+    .stage-actions button {
+      width: 42px;
+      color: var(--ink);
+      background: white;
+      border-color: var(--line);
+    }
+
+    .primary-button {
+      background: var(--red);
+      color: white;
+    }
+
+    .secondary-button {
+      background: white;
+      color: var(--ink);
+      border-color: var(--line);
+    }
+
+    .phone-frame {
+      width: 390px;
+      height: 820px;
+      border-radius: 34px;
+      background: #111820;
+      padding: 12px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .phone-frame::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      width: 118px;
+      height: 22px;
+      border-radius: 0 0 16px 16px;
+      background: #111820;
+      transform: translateX(-50%);
+      z-index: 4;
+    }
+
+    .phone-screen {
+      height: 100%;
+      overflow: hidden;
+      border-radius: 26px;
+      background: #f7f9fb;
+      position: relative;
+    }
+
+    .screen {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: #f7f9fb;
+    }
+
+    .screen-header {
+      min-height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: white;
+      border-bottom: 1px solid #e7ebf0;
+      padding: 18px 16px 10px;
+    }
+
+    .screen-header strong {
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+
+    .phone-content {
+      flex: 1;
+      overflow: hidden;
+      padding: 14px;
+      position: relative;
+    }
+
+    .bottom-nav {
+      height: 66px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid #e4e8ed;
+      background: white;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 4px;
+      color: #85909b;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .nav-item.active {
+      color: var(--red);
+    }
+
+    .nav-dot {
+      width: 19px;
+      height: 19px;
+      border-radius: 6px;
+      background: currentColor;
+      opacity: 0.9;
+    }
+
+    .hero-login {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 28px;
+      background:
+        linear-gradient(180deg, rgba(201, 24, 48, 0.08), rgba(22, 140, 132, 0.04)),
+        white;
+    }
+
+    .hero-login img {
+      width: 142px;
+      height: 142px;
+      object-fit: contain;
+      margin-bottom: 22px;
+    }
+
+    .hero-login h2 {
+      font-size: 28px;
+      margin: 0 0 8px;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .hero-login p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .line-card,
+    .status-card,
+    .summary-card,
+    .product-card,
+    .draft-card,
+    .modal-card {
+      background: white;
+      border: 1px solid #e6ebf0;
+      border-radius: 8px;
+      box-shadow: 0 7px 18px rgba(24, 32, 42, 0.06);
+    }
+
+    .line-card {
+      margin-top: 26px;
+      width: 100%;
+      padding: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      text-align: left;
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal), var(--red));
+      color: white;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+    }
+
+    .sheet {
+      margin-top: auto;
+      background: white;
+      border-radius: 22px 22px 0 0;
+      padding: 24px 20px 30px;
+      box-shadow: 0 -16px 45px rgba(24, 32, 42, 0.14);
+    }
+
+    .sheet h2,
+    .status-card h2 {
+      margin: 0 0 6px;
+      font-size: 22px;
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .sheet p,
+    .status-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .field {
+      margin-top: 16px;
+    }
+
+    .field span {
+      display: block;
+      color: #4a5563;
+      font-size: 12px;
+      font-weight: 760;
+      margin-bottom: 6px;
+    }
+
+    .input-like {
+      height: 44px;
+      border-radius: 8px;
+      border: 1px solid #dbe2ea;
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .status-card {
+      padding: 26px 22px;
+      text-align: center;
+      margin-top: 82px;
+    }
+
+    .status-icon {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: rgba(244, 169, 41, 0.18);
+      color: #9f640b;
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      font-weight: 900;
+      margin: 0 auto 18px;
+    }
+
+    .tab-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      background: white;
+      border-bottom: 1px solid #e7ebf0;
+    }
+
+    .tab {
+      padding: 12px 8px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 760;
+      color: var(--muted);
+      border-bottom: 3px solid transparent;
+    }
+
+    .tab.active {
+      color: var(--red);
+      border-bottom-color: var(--red);
+    }
+
+    .search {
+      height: 42px;
+      border-radius: 8px;
+      background: white;
+      border: 1px solid #e0e6ec;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      color: #8b96a2;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .product-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .product-card {
+      min-height: 94px;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 74px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      position: relative;
+    }
+
+    .product-card.locked {
+      border-left: 4px solid var(--amber);
+    }
+
+    .locked-badge {
+      position: absolute;
+      right: 10px;
+      top: 8px;
+      color: #9f640b;
+      font-size: 10px;
+      font-weight: 850;
+    }
+
+    .product-title {
+      margin: 3px 0 0;
+      font-weight: 850;
+      line-height: 1.25;
+      font-size: 13px;
+    }
+
+    .sku {
+      color: #8a95a1;
+      font-size: 11px;
+      font-weight: 760;
+    }
+
+    .pill {
+      border: 1px solid #ccd4de;
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-size: 11px;
+      font-weight: 760;
+      color: var(--muted);
+      background: white;
+      white-space: nowrap;
+    }
+
+    .pack {
+      width: 74px;
+      height: 74px;
+      border-radius: 8px;
+      background: #eef2f6;
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+    }
+
+    .pack::before {
+      content: "";
+      width: 34px;
+      height: 58px;
+      border-radius: 10px 10px 6px 6px;
+      background: linear-gradient(180deg, var(--pack-top), var(--pack-bottom));
+      box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.45);
+    }
+
+    .pack::after {
+      content: "B";
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: white;
+      color: var(--red);
+      font-size: 14px;
+      font-weight: 950;
+      top: 22px;
+      left: 26px;
+    }
+
+    .pack.red {
+      --pack-top: #ef5347;
+      --pack-bottom: #c91830;
+    }
+
+    .pack.teal {
+      --pack-top: #35b6aa;
+      --pack-bottom: #168c84;
+    }
+
+    .pack.amber {
+      --pack-top: #ffd35d;
+      --pack-bottom: #f4a929;
+    }
+
+    .pack.navy {
+      --pack-top: #536c86;
+      --pack-bottom: #243b53;
+    }
+
+    .ref-thumb {
+      width: 74px;
+      height: 74px;
+      border-radius: 8px;
+      background: #eef2f6;
+      overflow: hidden;
+      position: relative;
+      display: block;
+    }
+
+    .ref-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.55) contrast(1.04);
+      transform: scale(1.08);
+    }
+
+    .ref-thumb .rebrand-mark {
+      position: absolute;
+      left: 6px;
+      right: 6px;
+      bottom: 6px;
+      height: 20px;
+      border-radius: 5px;
+      background: linear-gradient(90deg, var(--red), var(--coral));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-size: 8px;
+      font-weight: 950;
+      letter-spacing: 0.02em;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.16);
+    }
+
+    .ref-thumb .rebrand-mark::before {
+      content: "B";
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: white;
+      color: var(--red);
+      display: grid;
+      place-items: center;
+      font-size: 9px;
+    }
+
+    .ref-large {
+      border-radius: 8px;
+      background: #eef2f6;
+      overflow: hidden;
+      position: relative;
+      min-height: 130px;
+    }
+
+    .ref-large img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(0.6) contrast(1.04);
+    }
+
+    .ref-large .rebrand-strip {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      border-radius: 8px;
+      background: linear-gradient(90deg, rgba(201,24,48,0.96), rgba(238,70,57,0.96));
+      color: white;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 900;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.2);
+    }
+
+    .ref-large .rebrand-strip img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      filter: none;
+      flex-shrink: 0;
+    }
+
+    .reference-note {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
+    .deadline {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 66px;
+      background: #fff0f1;
+      color: var(--red);
+      border-top: 1px solid #ffd4d8;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .camera-screen {
+      background: #121820;
+      color: white;
+      min-height: 100%;
+    }
+
+    .camera-top {
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 15px 8px;
+      color: white;
+    }
+
+    .camera-title {
+      font-size: 15px;
+      font-weight: 850;
+    }
+
+    .camera-view {
+      position: relative;
+      height: 575px;
+      margin: 0 12px;
+      border-radius: 18px;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(145deg, #1b2734, #10161d);
+      background-size: 34px 34px, 34px 34px, auto;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .barcode-guide {
+      position: absolute;
+      left: 28px;
+      right: 28px;
+      top: 248px;
+      height: 118px;
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      border-radius: 14px;
+      box-shadow: 0 0 0 999px rgba(0, 0, 0, 0.25);
+    }
+
+    .scan-line {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      top: 36px;
+      height: 3px;
+      border-radius: 4px;
+      background: #19d68d;
+      box-shadow: 0 0 18px #19d68d;
+    }
+
+    .camera-hint {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 20px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--ink);
+      padding: 12px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    .barcode-stripes {
+      position: absolute;
+      left: 78px;
+      right: 78px;
+      top: 289px;
+      height: 38px;
+      background:
+        linear-gradient(90deg, #fff 0 4px, transparent 4px 8px, #fff 8px 10px, transparent 10px 18px, #fff 18px 26px, transparent 26px 31px, #fff 31px 34px, transparent 34px 42px);
+      opacity: 0.72;
+    }
+
+    .camera-footer {
+      height: 126px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .shutter {
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      border: 5px solid rgba(255, 255, 255, 0.85);
+      background: white;
+      box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.18);
+    }
+
+    .match-card {
+      margin: 18px 0;
+      padding: 14px;
+    }
+
+    .match-grid {
+      display: grid;
+      grid-template-columns: 82px 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .confidence {
+      margin-top: 14px;
+      height: 10px;
+      background: #e8eef4;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .confidence span {
+      display: block;
+      width: 97%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--teal), var(--green));
+    }
+
+    .camera-scene {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.06), transparent 30%),
+        linear-gradient(90deg, #212d39, #17212b);
+    }
+
+    .counting-photo {
+      position: absolute;
+      inset: 0;
+      background: #111820;
+    }
+
+    .counting-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.72) contrast(1.06) brightness(0.86);
+    }
+
+    .counting-photo::after {
+      content: "BAKSTERS reference recreate";
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      border-radius: 999px;
+      background: rgba(201, 24, 48, 0.92);
+      color: white;
+      padding: 7px 10px;
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 0;
+    }
+
+    .shelf {
+      position: absolute;
+      left: 30px;
+      right: 30px;
+      height: 14px;
+      border-radius: 7px;
+      background: #455766;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+    }
+
+    .shelf.s1 { top: 166px; }
+    .shelf.s2 { top: 310px; }
+    .shelf.s3 { top: 455px; }
+
+    .mini-pack {
+      position: absolute;
+      width: 38px;
+      height: 74px;
+      border-radius: 9px 9px 5px 5px;
+      background: linear-gradient(180deg, #ef5347, #c91830);
+      box-shadow: inset 0 0 0 3px rgba(255,255,255,0.3), 0 8px 15px rgba(0,0,0,0.22);
+    }
+
+    .mini-pack::after {
+      content: "B";
+      position: absolute;
+      top: 27px;
+      left: 8px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: white;
+      color: var(--red);
+      font-size: 13px;
+      font-weight: 950;
+    }
+
+    .mini-pack.teal {
+      background: linear-gradient(180deg, #35b6aa, #168c84);
+    }
+
+    .box {
+      position: absolute;
+      border: 2px solid #19d68d;
+      border-radius: 7px;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.18), 0 0 14px rgba(25,214,141,0.55);
+    }
+
+    .box::after {
+      content: "";
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #19d68d;
+      right: -5px;
+      top: -5px;
+      box-shadow: 0 0 12px rgba(25,214,141,0.75);
+    }
+
+    .result-float {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      padding: 14px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--ink);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .big-count {
+      font-size: 36px;
+      line-height: 1;
+      font-weight: 950;
+      color: var(--red);
+    }
+
+    .verify-photo {
+      height: 278px;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(90deg, #263644, #19242e);
+      margin-bottom: 12px;
+    }
+
+    .qty-row {
+      display: grid;
+      grid-template-columns: 46px 1fr 46px;
+      gap: 10px;
+      align-items: center;
+      margin: 16px 0;
+    }
+
+    .qty-button {
+      height: 46px;
+      border-radius: 50%;
+      border: 0;
+      background: var(--red);
+      color: white;
+      font-size: 25px;
+      font-weight: 900;
+    }
+
+    .qty-value {
+      height: 50px;
+      border-radius: 8px;
+      background: white;
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      font-weight: 950;
+    }
+
+    .warning {
+      border: 1px solid #ffd1d6;
+      background: #fff1f3;
+      color: var(--red);
+      border-radius: 999px;
+      padding: 9px 12px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 850;
+      margin: 12px 0;
+    }
+
+    .summary-card {
+      padding: 14px;
+    }
+
+    .summary-card h3,
+    .draft-card h3 {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .summary-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .metric-tile {
+      background: #f8fafc;
+      border: 1px solid #e6ebf0;
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .metric-tile span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 760;
+    }
+
+    .metric-tile strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 19px;
+      color: var(--red);
+    }
+
+    .save-bar {
+      margin-top: auto;
+      padding: 14px;
+      background: linear-gradient(180deg, rgba(247,249,251,0), #f7f9fb 24%);
+    }
+
+    .success-panel {
+      display: grid;
+      place-items: center;
+      height: 100%;
+      background: white;
+      text-align: center;
+      padding: 24px;
+    }
+
+    .success-check {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: var(--green);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 34px;
+      font-weight: 900;
+      margin: 0 auto 14px;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .filter-pills span {
+      border: 1px solid #d4dbe4;
+      background: white;
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 760;
+      white-space: nowrap;
+    }
+
+    .filter-pills .active {
+      border-color: var(--red);
+      color: var(--red);
+      background: #fff2f3;
+    }
+
+    .draft-card {
+      padding: 12px;
+      margin-bottom: 10px;
+      display: grid;
+      grid-template-columns: 70px 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .delete-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 0;
+      color: var(--red);
+      background: #ffe7ea;
+      font-weight: 950;
+    }
+
+    .send-panel {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 66px;
+      background: white;
+      border-top: 1px solid #e5e9ee;
+      padding: 12px 14px;
+    }
+
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(12, 18, 26, 0.52);
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      z-index: 5;
+    }
+
+    .modal-card {
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .sent-folder {
+      margin-top: 14px;
+      overflow: hidden;
+    }
+
+    .folder-top {
+      padding: 14px;
+      border-bottom: 1px solid #edf1f5;
+    }
+
+    .folder-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .folder-stats div {
+      padding: 14px;
+      text-align: center;
+      border-right: 1px solid #edf1f5;
+    }
+
+    .folder-stats div:last-child {
+      border-right: 0;
+    }
+
+    .folder-stats strong {
+      display: block;
+      color: var(--red);
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .exception-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .exception-card {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #e5eaf0;
+      background: white;
+    }
+
+    .exception-card strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    .exception-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .result-panel {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(227, 232, 238, 0.95);
+      border-radius: 8px;
+      padding: 18px;
+      height: fit-content;
+      box-shadow: var(--shadow);
+    }
+
+    .result-panel h2 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .result-panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.48;
+      font-size: 14px;
+    }
+
+    .result-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .result-item {
+      border-radius: 8px;
+      background: white;
+      border: 1px solid #e5eaf0;
+      padding: 12px;
+    }
+
+    .result-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 5px;
+    }
+
+    .result-item strong {
+      display: block;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .payload {
+      margin-top: 16px;
+      background: #101820;
+      color: #d7f3ef;
+      border-radius: 8px;
+      padding: 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      overflow: auto;
+      max-height: 250px;
+    }
+
+    .video-section {
+      grid-column: 1 / -1;
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1fr minmax(280px, 520px);
+      gap: 18px;
+      align-items: center;
+    }
+
+    .video-section h2 {
+      margin: 0 0 6px;
+      font-size: 20px;
+    }
+
+    .video-section p {
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.45;
+    }
+
+    .video-section video {
+      width: 100%;
+      border-radius: 8px;
+      background: #111820;
+      border: 1px solid #dce3ea;
+    }
+
+    body.record .video-section {
+      display: none;
+    }
+
+    body.record {
+      overflow: hidden;
+    }
+
+    body.record .app-shell {
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    body.record .flow-list {
+      gap: 6px;
+    }
+
+    body.record .flow-button {
+      padding: 8px 10px;
+    }
+
+    body.record .flow-desc {
+      display: none;
+    }
+
+    body.record .phone-frame {
+      width: 340px;
+      height: 700px;
+    }
+
+    @media (max-width: 1180px) {
+      .app-shell {
+        grid-template-columns: 260px 1fr;
+      }
+      .result-panel {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .app-shell {
+        display: block;
+        padding: 12px;
+      }
+      .side,
+      .result-panel,
+      .video-section {
+        margin-bottom: 14px;
+      }
+      .stage-title {
+        margin: 12px 0;
+      }
+      .phone-frame {
+        width: min(100%, 390px);
+        height: 780px;
+      }
+      .video-section {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app-shell">
+    <aside class="side">
+      <div class="brand-row">
+        <img src="assets/baksters-heart.png" alt="Baksters heart logo">
+        <div>
+        <div class="brand-name">Baksters Counting</div>
+        <div class="brand-sub">Reference recreate mockup</div>
+        </div>
+      </div>
+      <div id="flowList" class="flow-list" aria-label="Flow steps"></div>
+    </aside>
+
+    <section class="phone-wrap">
+      <div class="stage-title">
+        <div>
+          <h1 id="stageHeading">Baksters Counting</h1>
+          <p id="stageSubheading">Reference recreate flow</p>
+        </div>
+        <div class="stage-actions">
+          <button type="button" id="prevBtn" aria-label="Previous screen">&lt;</button>
+          <button type="button" id="nextBtn" aria-label="Next screen">&gt;</button>
+        </div>
+      </div>
+      <div class="phone-frame" aria-live="polite">
+        <div class="phone-screen" id="phoneScreen"></div>
+      </div>
+    </section>
+
+    <aside class="result-panel">
+      <h2 id="resultTitle">Result</h2>
+      <p id="resultBody"></p>
+      <div class="result-list" id="resultList"></div>
+      <pre class="payload" id="payload"></pre>
+    </aside>
+
+    <section class="video-section">
+      <div>
+      <h2>Reference Walkthrough Video</h2>
+      <p>The MP4 is generated from these reference-driven HTML states. Product silhouettes use local project reference photos, while brand/data/copy are recreated for Baksters Counting.</p>
+      </div>
+      <video controls muted playsinline preload="metadata" poster="assets/screens/04-home.png">
+        <source src="assets/baksters-reference-recreate-walkthrough.mp4" type="video/mp4">
+      </video>
+    </section>
+  </main>
+
+  <script>
+    const products = [
+      { sku: "885-BK-1001", name: "Baksters Advanced Glow Box 30 ml", tone: "red", qty: 12, image: "assets/reference-box.jpg", shape: "twin-box" },
+      { sku: "885-BK-1002", name: "Baksters Cleansing Tube 100 ml", tone: "amber", qty: 8, image: "assets/reference-tube.jpg", shape: "tube" },
+      { sku: "885-BK-1003", name: "Baksters Black Mask Sachet 25 ml", tone: "teal", qty: 0, image: "assets/reference-counting-row.jpg", shape: "sachet-row" },
+      { sku: "885-BK-1004", name: "Baksters Serum Box Twin Pack 30 ml", tone: "navy", qty: 5, image: "assets/reference-box.jpg", shape: "box" }
+    ];
+
+    const pack = (tone, product = products[0]) => `
+      <div class="ref-thumb" aria-hidden="true">
+        <img src="${product.image}" alt="">
+        <span class="rebrand-mark">BAKSTERS</span>
+      </div>
+    `;
+
+    const largeProduct = (product = products[0]) => `
+      <div class="ref-large">
+        <img src="${product.image}" alt="${product.name}">
+        <div class="rebrand-strip">
+          <span>BAKSTERS</span>
+          <img src="assets/baksters-heart.png" alt="">
+        </div>
+      </div>
+    `;
+
+    const bottomNav = (active) => `
+      <nav class="bottom-nav">
+        ${["Home", "Drafts", "Sent", "Profile"].map((item) => `
+          <div class="nav-item ${active === item ? "active" : ""}">
+            <span class="nav-dot"></span>
+            <span>${item}</span>
+          </div>
+        `).join("")}
+      </nav>
+    `;
+
+    const productCard = (product, opts = {}) => `
+      <article class="product-card ${opts.locked ? "locked" : ""}">
+        ${opts.locked ? '<span class="locked-badge">Counting now</span>' : ""}
+        ${pack(product.tone, product)}
+        <div>
+          <div class="sku">SKU: ${product.sku}</div>
+          <p class="product-title">${product.name}</p>
+        </div>
+        <button type="button" class="pill">${opts.out ? "Out of stock" : "Count"}</button>
+      </article>
+    `;
+
+    const boxes = () => {
+      const b = [
+        [48, 88], [96, 88], [144, 88], [192, 88],
+        [68, 232], [116, 232], [164, 232], [212, 232],
+        [44, 376], [92, 376], [140, 376], [188, 376]
+      ];
+      return b.map(([left, top]) => `<span class="box" style="left:${left}px;top:${top}px;width:44px;height:82px"></span>`).join("");
+    };
+
+    const countScene = (showBoxes = false) => `
+      <div class="counting-photo">
+        <img src="assets/reference-counting-row.jpg" alt="Reference counting row">
+        ${showBoxes ? boxes() : ""}
+      </div>
+    `;
+
+    const screens = [
+      {
+        id: "entry",
+        nav: "LINE Entry",
+        title: "Baksters entry",
+        subtitle: "LINE LIFF identity and brand landing",
+        description: "The Herhyness entry state is recreated for Baksters Counting with the supplied heart logo, LINE profile context, and current counting round.",
+        screen: `
+          <div class="screen">
+            <div class="hero-login">
+              <img src="assets/baksters-heart.png" alt="Baksters heart logo">
+              <h2>Baksters Counting</h2>
+              <p>Mobile stock counting for BA store teams.</p>
+              <div class="line-card">
+                <div class="avatar">BA</div>
+                <div>
+                  <strong>LINE connected</strong>
+                  <p style="margin:4px 0 0;color:var(--muted);font-size:12px">Nicha B. - Siam Paragon</p>
+                </div>
+              </div>
+              <button class="primary-button" style="width:100%;margin-top:18px">Continue to Counting</button>
+            </div>
+          </div>
+        `,
+        results: [
+          ["Brand swap", "Logo, primary red, and product vocabulary changed to Baksters."],
+          ["Session", "LINE user id and active round are loaded before the checklist opens."],
+          ["Next route", "/home"]
+        ],
+        payload: { authStatus: "linked", brand: "Baksters", storeCode: "BKS-SPG", roundId: "round-2026-06-25" }
+      },
+      {
+        id: "register",
+        nav: "Register",
+        title: "Registration",
+        subtitle: "Existing Herhyness bottom sheet adapted to Baksters",
+        description: "The pre-seeded BA account flow keeps the same interaction: verify LINE identity, collect phone number, and submit for account linking.",
+        screen: `
+          <div class="screen" style="background:linear-gradient(180deg,#fff,#f3f6f9)">
+            <div class="screen-header"><strong>Baksters Counting</strong></div>
+            <div class="phone-content" style="display:flex;flex-direction:column">
+              <div class="status-card" style="margin-top:34px">
+                <div class="status-icon" style="background:#ffe8eb;color:var(--red)">B</div>
+                <h2>Connect BA account</h2>
+                <p>Confirm the LINE profile before starting a store round.</p>
+              </div>
+              <div class="sheet">
+                <h2>Register for Baksters</h2>
+                <p>Use the phone number assigned by the field team.</p>
+                <div class="field"><span>LINE display name</span><div class="input-like">Nicha Baksters</div></div>
+                <div class="field"><span>Phone number</span><div class="input-like">0812345678</div></div>
+                <button class="primary-button" style="width:100%;margin-top:18px">Submit registration</button>
+              </div>
+            </div>
+          </div>
+        `,
+        results: [
+          ["Validation", "Phone number uses the same 10 digit Thai mobile rule."],
+          ["Result", "BA record moves to pending approval unless already approved."],
+          ["Admin action", "Admin approves store, locations, and active dates."]
+        ],
+        payload: { lineDisplayName: "Nicha Baksters", phoneNumber: "0812345678", status: "pending_approval" }
+      },
+      {
+        id: "approval",
+        nav: "Approval",
+        title: "Approval state",
+        subtitle: "Pending, inactive, rejected, and expired use the same gate",
+        description: "Status screens keep the existing access control behavior while showing Baksters copy and support route.",
+        screen: `
+          <div class="screen">
+            <div class="screen-header"><strong>Account status</strong></div>
+            <div class="phone-content">
+              <div class="status-card">
+                <div class="status-icon">!</div>
+                <h2>Waiting for approval</h2>
+                <p>Your Baksters field account is registered. The admin team will activate the store assignment before counting starts.</p>
+                <div class="summary-row">
+                  <div class="metric-tile"><span>Store</span><strong>BKS-SPG</strong></div>
+                  <div class="metric-tile"><span>Locations</span><strong>2</strong></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `,
+        results: [
+          ["Pending", "User cannot open product checklist yet."],
+          ["Inactive", "Shows deactivated support state."],
+          ["Expired", "Shows access expired state after date window."]
+        ],
+        payload: { authStatus: "pending_approval", allowed: false, locations: ["Counter", "Backroom"] }
+      },
+      {
+        id: "home",
+        nav: "Home",
+        title: "Counting home",
+        subtitle: "Location tabs, product checklist, locks, and out-of-stock",
+        description: "This screen mirrors the Herhyness /home page and replaces generic icons with reference-driven Baksters product cards: active round, location filters, searchable store products, soft locks, and out-of-stock reporting.",
+        screen: `
+          <div class="screen">
+            <div class="screen-header"><strong>Baksters Counting</strong></div>
+            <div class="tab-row"><div class="tab active">Counter (3)</div><div class="tab">Backroom (2)</div></div>
+            <div class="phone-content">
+              <div class="search">Search barcode or product name</div>
+              <div class="product-list">
+                ${productCard(products[0])}
+                ${productCard(products[1], { locked: true })}
+                ${productCard(products[2], { out: true })}
+                ${productCard(products[3])}
+              </div>
+            </div>
+            <div class="deadline">Counting cutoff: 25 Jun 2026, 23:59</div>
+            ${bottomNav("Home")}
+          </div>
+        `,
+        results: [
+          ["Checklist", "Uncounted products display by assigned location."],
+          ["Soft lock", "A product being counted by another BA is blocked and marked yellow."],
+          ["Out of stock", "Zero-quantity draft can be created with an optional note."]
+        ],
+        payload: { remainingByLocation: { Counter: 3, Backroom: 2 }, lockedSku: "885-BK-1002", cutoffTime: "23:59" }
+      },
+      {
+        id: "scan",
+        nav: "SKU Scan",
+        title: "Barcode scan",
+        subtitle: "Expected product is locked before the scanner opens",
+        description: "The scan flow compares the barcode captured from the Baksters product against the selected checklist SKU before opening the count camera.",
+        screen: `
+          <div class="screen camera-screen">
+            <div class="camera-top"><span>&lt;</span><span class="camera-title">Scan Baksters SKU</span><span>Close</span></div>
+            <div class="camera-view">
+              <div class="barcode-stripes"></div>
+              <div class="barcode-guide"><span class="scan-line"></span></div>
+              <div class="camera-hint">Detected 885-BK-1001 - matching selected product</div>
+            </div>
+            <div class="camera-footer">
+              <div style="font-size:12px;color:#c6d0da">Hold barcode inside the guide</div>
+              <div class="shutter"></div>
+            </div>
+          </div>
+        `,
+        results: [
+          ["Input", "Camera frame or LIFF native scanner barcode."],
+          ["Match rule", "Exact or approved compare result with expected SKU."],
+          ["Next step", "Product confirmation before count camera."]
+        ],
+        payload: { expectedSku: "885-BK-1001", detectedSku: "885-BK-1001", compareVerdict: "match", scanMs: 420 }
+      },
+      {
+        id: "match",
+        nav: "SKU Match",
+        title: "Product match",
+        subtitle: "BA confirms the actual product before counting quantity",
+        description: "After a barcode match, the mockup shows a Baksters reference image based on the local product-photo silhouette, confidence, and the selected store location.",
+        screen: `
+          <div class="screen">
+            <div class="screen-header"><strong>Confirm Product</strong></div>
+            <div class="phone-content">
+              <div class="match-card summary-card">
+                <div class="match-grid">
+                  ${pack("red", products[0])}
+                  <div>
+                    <div class="sku">SKU: ${products[0].sku}</div>
+                    <h3>${products[0].name}</h3>
+                    <p style="margin:6px 0 0;color:var(--muted);font-size:12px">Location: Counter</p>
+                  </div>
+                </div>
+                <div class="confidence"><span></span></div>
+                <p style="margin:8px 0 0;color:var(--green);font-size:12px;font-weight:850">Barcode confidence 97%</p>
+              </div>
+              <p class="reference-note">Reference mode: product shape uses the real local box/tube photo silhouette with Baksters overlay.</p>
+              <button class="primary-button" style="width:100%;margin-top:12px">Open counting camera</button>
+              <button class="secondary-button" style="width:100%;margin-top:10px">Scan again</button>
+            </div>
+          </div>
+        `,
+        results: [
+          ["Reference", "Local product photo silhouette is reused with Baksters overlay and product data."],
+          ["Lock context", "SKU, location, round, and BA are carried into the count camera."],
+          ["Fallback", "Scan again or manual product picker for not-found cases."]
+        ],
+        payload: { selectedLocation: "Counter", productName: products[0].name, confidence: 0.97 }
+      },
+      {
+        id: "count",
+        nav: "AI Count",
+        title: "Counting camera",
+        subtitle: "YOLO-style detection result shown on Baksters product",
+        description: "The count camera captures the product stack, overlays detections, and returns quantity plus boxes for review.",
+        screen: `
+          <div class="screen camera-screen">
+            <div class="camera-top"><span>&lt;</span><span class="camera-title">Count product</span><span>Close</span></div>
+            <div class="camera-view">
+              ${countScene(true)}
+              <div class="result-float">
+                <div>
+                  <strong>AI count complete</strong>
+                  <p style="margin:4px 0 0;color:var(--muted);font-size:12px">12 boxes detected on shelf photo</p>
+                </div>
+                <div class="big-count">12</div>
+              </div>
+            </div>
+            <div class="camera-footer">
+              <div class="shutter"></div>
+            </div>
+          </div>
+        `,
+        results: [
+          ["Detection", "12 bounding boxes returned from the count model."],
+          ["Quality", "Image quality passes blur and brightness thresholds."],
+          ["Output", "Raw count image plus annotated overlay are saved for review."]
+        ],
+        payload: { model: "baksters-counting-yolo", count: 12, boundingBoxes: 12, quality: { blur: "pass", brightness: "pass" } }
+      },
+      {
+        id: "verify",
+        nav: "Verify",
+        title: "Verify quantity",
+        subtitle: "BA can retake or adjust before saving",
+        description: "This mirrors /stock/verify: annotated count image, product summary, quantity counter, warning, and save to draft.",
+        screen: `
+          <div class="screen">
+            <div class="screen-header"><strong>Verify Baksters Products</strong></div>
+            <div class="phone-content">
+              <div class="verify-photo">
+                ${countScene(true)}
+              </div>
+              <button class="secondary-button" style="width:100%;height:38px;padding:0">Retake stock photo</button>
+              <div class="match-card summary-card">
+                <div class="match-grid">
+                  ${pack("red", products[0])}
+                  <div>
+                    <div class="sku">SKU: ${products[0].sku}</div>
+                    <h3>${products[0].name}</h3>
+                  </div>
+                </div>
+              </div>
+              <div class="qty-row">
+                <button class="qty-button">-</button>
+                <div class="qty-value">12</div>
+                <button class="qty-button">+</button>
+              </div>
+              <div class="warning">Please verify the quantity before saving</div>
+              <button class="primary-button" style="width:100%">Add to draft</button>
+            </div>
+          </div>
+        `,
+        results: [
+          ["Editable count", "BA can increment/decrement the detected quantity."],
+          ["Audit trail", "Bounding boxes and original image stay linked to the draft."],
+          ["Save status", "Creates pending product item for later send."]
+        ],
+        payload: { finalQuantity: 12, status: "pending", unit: "pcs", canRetake: true }
+      },
+      {
+        id: "save",
+        nav: "Save",
+        title: "Save result",
+        subtitle: "Session, count, SKU, and product item are persisted",
+        description: "The review/save state summarizes what will be sent to the backend and shows the same success behavior as the source app, using the reference counting photo and Baksters product data.",
+        screen: `
+          <div class="screen">
+            <div class="screen-header"><strong>Review Details</strong></div>
+            <div class="phone-content">
+              <div class="summary-card">
+                <div class="match-grid">
+                  <div class="verify-photo" style="height:100px;margin:0">${countScene(true)}</div>
+                  <div>
+                    <div class="sku">SKU: ${products[0].sku}</div>
+                    <h3>${products[0].name}</h3>
+                    <p style="margin:6px 0 0;color:var(--muted);font-size:12px">Counter - 25 Jun 2026</p>
+                  </div>
+                </div>
+                <div class="summary-row">
+                  <div class="metric-tile"><span>Quantity</span><strong>12</strong></div>
+                  <div class="metric-tile"><span>Confidence</span><strong>97%</strong></div>
+                </div>
+              </div>
+            </div>
+            <div class="save-bar"><button class="primary-button" style="width:100%">Save to draft</button></div>
+          </div>
+        `,
+        results: [
+          ["Create session", "Stock counting session is created if missing."],
+          ["Save count", "Count image, boxes, and quality metrics are persisted."],
+          ["Create item", "Pending product item appears in Drafts and Home remaining count updates."]
+        ],
+        payload: { sessionId: "sess-bks-0091", productItemId: "item-bks-1182", status: "pending", quantity: 12 }
+      },
+      {
+        id: "drafts",
+        nav: "Drafts",
+        title: "Draft review",
+        subtitle: "Store team checks pending items before send",
+        description: "Drafts are grouped by location, include quantity totals, support edit/delete, and block send until all required products are complete.",
+        screen: `
+          <div class="screen">
+            <div class="screen-header"><strong>Drafts</strong></div>
+            <div class="phone-content">
+              <div class="filter-pills"><span class="active">All</span><span>Counter</span><span>Backroom</span></div>
+              <div class="summary-row" style="margin-bottom:12px">
+                <div class="metric-tile"><span>Total items</span><strong>3</strong></div>
+                <div class="metric-tile"><span>Total units</span><strong>25</strong></div>
+              </div>
+              <div class="draft-card">
+                ${pack("red", products[0])}
+                <div><div class="sku">SKU: ${products[0].sku}</div><h3>${products[0].name}</h3><p style="margin:6px 0 0;color:var(--muted);font-size:12px"><strong>12</strong> pcs</p></div>
+                <button class="delete-dot">x</button>
+              </div>
+              <div class="draft-card">
+                ${pack("teal", products[2])}
+                <div><div class="sku">SKU: ${products[2].sku}</div><h3>${products[2].name}</h3><p style="margin:6px 0 0;color:var(--red);font-size:12px;font-weight:850">Out of stock</p></div>
+                <button class="delete-dot">x</button>
+              </div>
+            </div>
+            <div class="send-panel"><button class="primary-button" style="width:100%">Send to admin</button></div>
+            ${bottomNav("Drafts")}
+          </div>
+        `,
+        results: [
+          ["Draft status", "Items remain editable until sent."],
+          ["Store scope", "All BA draft items in this store can be included."],
+          ["Send rule", "Send unlocks after remaining count reaches zero or cutoff auto-send runs."]
+        ],
+        payload: { pendingItems: 3, totalUnits: 25, remainingStoreProducts: 0, sendEnabled: true }
+      },
+      {
+        id: "sent",
+        nav: "Sent Result",
+        title: "Sent result",
+        subtitle: "Round summary and admin-ready export",
+        description: "The sent result keeps the source app summary pattern and adds an admin export view for Baksters operations.",
+        screen: `
+          <div class="screen">
+            <div class="screen-header"><strong>Sent</strong></div>
+            <div class="phone-content">
+              <div class="sent-folder summary-card">
+                <div class="folder-top">
+                  <p style="margin:0 0 4px;color:var(--muted);font-size:12px">25 Jun 2026 23:42</p>
+                  <h3>Stock Count Round - Baksters Siam Paragon</h3>
+                </div>
+                <div class="folder-stats">
+                  <div><strong>4</strong><span>Items</span></div>
+                  <div><strong>30</strong><span>Units</span></div>
+                </div>
+              </div>
+              <div class="summary-card" style="margin-top:12px">
+                <h3>Admin export result</h3>
+                <div class="summary-row">
+                  <div class="metric-tile"><span>Excel</span><strong>Ready</strong></div>
+                  <div class="metric-tile"><span>Images</span><strong>Linked</strong></div>
+                </div>
+              </div>
+            </div>
+            ${bottomNav("Sent")}
+          </div>
+        `,
+        results: [
+          ["Manual send", "Pending drafts move to sent and are no longer editable."],
+          ["Export", "Admin export includes SKU, quantity, location, BA, photos, and boxes."],
+          ["Round summary", "Sent folder preserves round-level totals."]
+        ],
+        payload: { sentAt: "2026-06-25T23:42:00+07:00", exportedRows: 4, exportedUnits: 30, excelStatus: "ready" }
+      },
+      {
+        id: "exceptions",
+        nav: "Exceptions",
+        title: "Exception flows",
+        subtitle: "Out-of-stock, cutoff, and lock states",
+        description: "The mockup also covers side paths that matter during field operation: no stock, round cutoff, and another BA already counting.",
+        screen: `
+          <div class="screen">
+            <div class="screen-header"><strong>Operational States</strong></div>
+            <div class="phone-content">
+              <div class="exception-list">
+                <div class="exception-card"><strong>Out of stock</strong><p>Product is saved as quantity 0 with optional note and still appears in Drafts.</p></div>
+                <div class="exception-card"><strong>Cutoff auto-send</strong><p>When the round expires, drafts are sent to admin and uncounted products are marked not counted.</p></div>
+                <div class="exception-card"><strong>Soft lock</strong><p>Another BA's active product is blocked in the checklist until submit, abandon release, or TTL expiry.</p></div>
+              </div>
+            </div>
+            <div class="modal-overlay">
+              <div class="modal-card">
+                <div class="status-icon" style="background:#ffe7ea;color:var(--red);margin-bottom:12px">x</div>
+                <h3 style="margin:0 0 6px">Report out of stock?</h3>
+                <p style="margin:0 0 12px;color:var(--muted);font-size:12px">Baksters Fiber Shot Lychee will be saved in Drafts with quantity 0.</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="secondary-button">Cancel</button><button class="primary-button">Confirm</button></div>
+              </div>
+            </div>
+            ${bottomNav("Home")}
+          </div>
+        `,
+        results: [
+          ["Out of stock", "Creates pending item with isOutOfStock true and quantity 0."],
+          ["Cutoff", "Auto-send protects the round deadline."],
+          ["Lock release", "Submit or home abandon path releases the soft lock."]
+        ],
+        payload: { isOutOfStock: true, cutoffAutoSend: true, lockTtlMinutes: 5 }
+      }
+    ];
+
+    let activeIndex = 0;
+
+    const flowList = document.getElementById("flowList");
+    const phoneScreen = document.getElementById("phoneScreen");
+    const stageHeading = document.getElementById("stageHeading");
+    const stageSubheading = document.getElementById("stageSubheading");
+    const resultTitle = document.getElementById("resultTitle");
+    const resultBody = document.getElementById("resultBody");
+    const resultList = document.getElementById("resultList");
+    const payload = document.getElementById("payload");
+
+    function renderFlow() {
+      flowList.innerHTML = screens.map((screen, index) => `
+        <button type="button" class="flow-button ${index === activeIndex ? "active" : ""}" data-index="${index}">
+          <span class="flow-index">${index + 1}</span>
+          <span class="flow-title">${screen.nav}</span>
+          <p class="flow-desc">${screen.subtitle}</p>
+        </button>
+      `).join("");
+
+      flowList.querySelectorAll("button").forEach((button) => {
+        button.addEventListener("click", () => setScreen(Number(button.dataset.index), true));
+      });
+    }
+
+    function setScreen(index, pushState = false) {
+      activeIndex = (index + screens.length) % screens.length;
+      const screen = screens[activeIndex];
+      stageHeading.textContent = screen.title;
+      stageSubheading.textContent = screen.subtitle;
+      phoneScreen.innerHTML = screen.screen;
+      resultTitle.textContent = screen.nav + " Result";
+      resultBody.textContent = screen.description;
+      resultList.innerHTML = screen.results.map(([label, value]) => `
+        <div class="result-item"><span>${label}</span><strong>${value}</strong></div>
+      `).join("");
+      payload.textContent = JSON.stringify(screen.payload, null, 2);
+      renderFlow();
+      if (pushState) {
+        const url = new URL(window.location.href);
+        url.searchParams.set("screen", screen.id);
+        window.history.replaceState({}, "", url);
+      }
+    }
+
+    document.getElementById("prevBtn").addEventListener("click", () => setScreen(activeIndex - 1, true));
+    document.getElementById("nextBtn").addEventListener("click", () => setScreen(activeIndex + 1, true));
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("record") === "1") {
+      document.body.classList.add("record");
+    }
+    const requested = params.get("screen");
+    const requestedIndex = screens.findIndex((screen) => screen.id === requested);
+    setScreen(requestedIndex >= 0 ? requestedIndex : 0);
+
+    window.__setBakstersScreen = (id) => {
+      const index = screens.findIndex((screen) => screen.id === id);
+      if (index >= 0) setScreen(index, true);
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "vabs-local-yolo-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:fe": "node frontend/server.mjs",
+    "dev:be": "node backend/server.mjs",
+    "dev:model": "cd model && python3 -m uvicorn server:app --host 0.0.0.0 --port 8000",
+    "test": "node --test tests/*.test.mjs && python3 -m unittest discover model/tests"
+  }
+}

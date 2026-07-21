@@ -1,0 +1,7 @@
+node_modules/
+*.pt
+__pycache__/
+.pytest_cache/
+.DS_Store
+raw/*
+annotated/*

@@ -1,0 +1,1854 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Baksters Counting Real UI Mockup</title>
+  <style>
+    :root {
+      --primary: #cf1934;
+      --primary-dark: #a91028;
+      --coral: #ee4639;
+      --teal: #0b686b;
+      --green: #16a05d;
+      --amber: #f2a51a;
+      --ink: #17202a;
+      --muted: #6a7482;
+      --line: #e4e9ef;
+      --soft: #f6f8fb;
+      --card: #ffffff;
+      --shadow: 0 16px 44px rgba(17, 24, 39, 0.14);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, rgba(207, 25, 52, 0.08), rgba(11, 104, 107, 0.08)),
+        #f0f4f7;
+    }
+
+    button { font: inherit; }
+
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 286px minmax(420px, 1fr) 330px;
+      gap: 22px;
+      padding: 22px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .brand img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .brand span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .flow {
+      display: grid;
+      gap: 8px;
+    }
+
+    .flow button {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 8px;
+      align-items: start;
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.86);
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      text-align: left;
+      transition: 160ms ease;
+    }
+
+    .flow button.active {
+      border-color: var(--primary);
+      background: white;
+      box-shadow: 0 10px 26px rgba(207, 25, 52, 0.12);
+    }
+
+    .num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #eaf1f6;
+      color: #31506a;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .active .num {
+      background: var(--primary);
+      color: white;
+    }
+
+    .flow-title {
+      display: block;
+      font-size: 14px;
+      font-weight: 850;
+      line-height: 1.15;
+    }
+
+    .flow-copy {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.3;
+    }
+
+    .stage {
+      display: grid;
+      justify-items: center;
+      align-content: start;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .stage-head {
+      width: min(100%, 680px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stage-head h1 {
+      margin: 0;
+      font-size: 25px;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .stage-head p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .stage-nav {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .stage-nav button {
+      width: 42px;
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: white;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .phone {
+      width: 390px;
+      height: 844px;
+      border-radius: 36px;
+      background: #101820;
+      padding: 12px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      width: 118px;
+      height: 23px;
+      border-radius: 0 0 16px 16px;
+      transform: translateX(-50%);
+      background: #101820;
+      z-index: 4;
+    }
+
+    .screen {
+      height: 100%;
+      overflow: hidden;
+      border-radius: 26px;
+      background: var(--soft);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .statusbar {
+      height: 28px;
+      padding: 8px 18px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #27313d;
+      font-size: 11px;
+      font-weight: 800;
+      background: white;
+    }
+
+    .appbar {
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 16px;
+      background: white;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .appbar.center { justify-content: center; }
+
+    .appbar-title {
+      flex: 1;
+      min-width: 0;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 850;
+      letter-spacing: 0;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border: 0;
+      border-radius: 50%;
+      background: #f1f4f7;
+      color: #27313d;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .content {
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+      padding: 14px;
+      position: relative;
+    }
+
+    .brand-card {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      background:
+        radial-gradient(circle at 50% 16%, rgba(207, 25, 52, 0.13), transparent 30%),
+        white;
+      text-align: center;
+    }
+
+    .brand-card img {
+      width: 132px;
+      height: 132px;
+      object-fit: contain;
+      margin-bottom: 20px;
+    }
+
+    .brand-card h2 {
+      margin: 0 0 6px;
+      font-size: 28px;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .brand-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .profile-row {
+      width: 100%;
+      margin-top: 26px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      background: #fbfcfd;
+      text-align: left;
+    }
+
+    .avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--primary), var(--teal));
+      color: white;
+      font-weight: 950;
+    }
+
+    .primary {
+      width: 100%;
+      min-height: 46px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-weight: 850;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(207, 25, 52, 0.22);
+    }
+
+    .secondary {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid #d5dde6;
+      border-radius: 999px;
+      background: white;
+      color: var(--ink);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .sheet {
+      margin-top: auto;
+      padding: 24px 20px 28px;
+      border-radius: 24px 24px 0 0;
+      background: white;
+      box-shadow: 0 -16px 38px rgba(17, 24, 39, 0.16);
+    }
+
+    .sheet h2 {
+      margin: 0 0 6px;
+      font-size: 22px;
+      line-height: 1.1;
+      text-align: center;
+    }
+
+    .sheet p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      line-height: 1.45;
+    }
+
+    .field {
+      margin-bottom: 13px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      color: #475467;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .input {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      border: 1px solid #d9e1e9;
+      border-radius: 8px;
+      background: #f8fafc;
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    .status-card {
+      margin-top: 70px;
+      padding: 26px 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+      text-align: center;
+      box-shadow: 0 7px 20px rgba(17, 24, 39, 0.06);
+    }
+
+    .status-icon {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 18px;
+      background: #fff3d7;
+      color: #a05b00;
+      font-size: 28px;
+      font-weight: 950;
+    }
+
+    .status-card h2 {
+      margin: 0 0 8px;
+      font-size: 21px;
+      line-height: 1.12;
+    }
+
+    .status-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      background: white;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tab {
+      height: 44px;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      border-bottom: 3px solid transparent;
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .round-strip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #fff1f3;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .search {
+      height: 43px;
+      margin-bottom: 10px;
+      padding: 0 12px;
+      border: 1px solid #dce4ec;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      color: #8a95a2;
+      font-size: 13px;
+    }
+
+    .product-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .product-card {
+      display: grid;
+      grid-template-columns: 78px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      min-height: 96px;
+      padding: 9px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: white;
+      box-shadow: 0 4px 12px rgba(17, 24, 39, 0.04);
+      position: relative;
+    }
+
+    .product-card.locked {
+      border-left: 4px solid var(--amber);
+      opacity: 0.98;
+    }
+
+    .lock-label {
+      position: absolute;
+      top: 7px;
+      right: 10px;
+      color: #a26300;
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .product-img {
+      width: 78px;
+      height: 78px;
+      border-radius: 8px;
+      background: #f4f7fa;
+      object-fit: contain;
+      display: block;
+    }
+
+    .sku {
+      color: #8a95a2;
+      font-size: 11px;
+      font-weight: 850;
+      line-height: 1.2;
+    }
+
+    .name {
+      margin: 3px 0 0;
+      font-size: 13px;
+      line-height: 1.25;
+      font-weight: 900;
+    }
+
+    .pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid #cdd6e0;
+      background: white;
+      color: #647283;
+      font-size: 11px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .bottom-nav {
+      height: 68px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--line);
+      background: white;
+      padding-bottom: 2px;
+    }
+
+    .navitem {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 3px;
+      color: #8a95a2;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .navitem.active {
+      color: var(--primary);
+    }
+
+    .navicon {
+      width: 21px;
+      height: 21px;
+      border-radius: 7px;
+      background: currentColor;
+      display: block;
+    }
+
+    .camera-screen {
+      background: #111820;
+      color: white;
+    }
+
+    .camera-screen .statusbar,
+    .camera-screen .appbar {
+      background: #111820;
+      border-color: rgba(255,255,255,0.08);
+      color: white;
+    }
+
+    .camera-screen .icon-btn {
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+
+    .camera-view {
+      position: relative;
+      margin: 10px 12px 0;
+      height: 610px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.09);
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(145deg, #1f2a36, #101820);
+      background-size: 36px 36px, 36px 36px, auto;
+    }
+
+    .scan-product {
+      position: absolute;
+      left: 50%;
+      top: 70px;
+      width: 210px;
+      height: 260px;
+      transform: translateX(-50%);
+      border-radius: 10px;
+      object-fit: contain;
+      background: rgba(255,255,255,0.9);
+      padding: 12px;
+      filter: brightness(0.95);
+    }
+
+    .barcode-label {
+      position: absolute;
+      left: 50%;
+      top: 342px;
+      width: 230px;
+      height: 68px;
+      transform: translateX(-50%);
+      border-radius: 8px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.28);
+    }
+
+    .barcode-bars {
+      width: 176px;
+      height: 38px;
+      background:
+        linear-gradient(90deg,
+          #111 0 3px, transparent 3px 7px,
+          #111 7px 9px, transparent 9px 14px,
+          #111 14px 21px, transparent 21px 25px,
+          #111 25px 28px, transparent 28px 36px,
+          #111 36px 42px, transparent 42px 47px,
+          #111 47px 49px, transparent 49px 56px,
+          #111 56px 64px, transparent 64px 70px,
+          #111 70px 73px, transparent 73px 80px,
+          #111 80px 86px, transparent 86px 94px,
+          #111 94px 98px, transparent 98px 104px,
+          #111 104px 110px, transparent 110px 116px,
+          #111 116px 123px, transparent 123px 130px,
+          #111 130px 132px, transparent 132px 138px,
+          #111 138px 146px, transparent 146px 152px,
+          #111 152px 156px, transparent 156px 164px,
+          #111 164px 176px);
+    }
+
+    .scan-guide {
+      position: absolute;
+      left: 34px;
+      right: 34px;
+      top: 310px;
+      height: 124px;
+      border: 2px solid rgba(255,255,255,0.88);
+      border-radius: 14px;
+      box-shadow: 0 0 0 999px rgba(0,0,0,0.26);
+    }
+
+    .scan-line {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      top: calc(12% + (76% * var(--scan-progress, 0)));
+      height: 3px;
+      border-radius: 8px;
+      background: #20e79a;
+      box-shadow: 0 0 16px #20e79a, 0 0 34px rgba(32,231,154,0.55);
+      animation: scanMove 2.1s ease-in-out infinite alternate;
+    }
+
+    @keyframes scanMove {
+      from { top: 13%; }
+      to { top: 84%; }
+    }
+
+    .scan-target {
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      border: 1px solid rgba(32,231,154,0.52);
+      animation: pulseTarget 1.2s ease-in-out infinite;
+    }
+
+    @keyframes pulseTarget {
+      0%, 100% { opacity: 0.46; }
+      50% { opacity: 1; }
+    }
+
+    .scan-hint {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      padding: 13px 12px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.94);
+      color: var(--ink);
+      text-align: center;
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .detected-pop {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--green);
+    }
+
+    .green-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: dotPulse 0.9s ease-in-out infinite;
+    }
+
+    @keyframes dotPulse {
+      0%, 100% { transform: scale(0.9); opacity: 0.55; }
+      50% { transform: scale(1.18); opacity: 1; }
+    }
+
+    .camera-footer {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      min-height: 108px;
+    }
+
+    .shutter {
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      background: white;
+      border: 5px solid rgba(255,255,255,0.78);
+      box-shadow: 0 0 0 5px rgba(255,255,255,0.16);
+    }
+
+    .confirm-card {
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+      box-shadow: 0 7px 18px rgba(17, 24, 39, 0.06);
+    }
+
+    .confirm-hero {
+      height: 220px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: #f6f8fb;
+      margin-bottom: 14px;
+    }
+
+    .confirm-hero img {
+      width: 92%;
+      height: 92%;
+      object-fit: contain;
+    }
+
+    .confidence {
+      margin-top: 13px;
+      height: 10px;
+      border-radius: 999px;
+      background: #e7edf3;
+      overflow: hidden;
+    }
+
+    .confidence span {
+      display: block;
+      width: 97%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--teal), var(--green));
+    }
+
+    .shelf-scene {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #334251, #182331 74%, #101820);
+      padding: 28px 16px 122px;
+      display: grid;
+      align-content: center;
+      gap: 18px;
+    }
+
+    .shelf-row {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 9px;
+      padding: 11px 8px 14px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.08);
+      box-shadow: inset 0 -7px 0 rgba(0,0,0,0.22);
+    }
+
+    .shelf-row::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 10px;
+      border-radius: 0 0 10px 10px;
+      background: #697789;
+    }
+
+    .shelf-product {
+      width: 100%;
+      height: 96px;
+      object-fit: contain;
+      border-radius: 5px;
+      background: rgba(255,255,255,0.9);
+      padding: 3px;
+    }
+
+    .detect-box {
+      position: absolute;
+      z-index: 4;
+      border: 2px solid #21e49a;
+      border-radius: 7px;
+      box-shadow: 0 0 12px rgba(33,228,154,0.7);
+      opacity: var(--box-opacity, 1);
+      animation: boxIn 0.55s ease both;
+      animation-delay: var(--delay, 0ms);
+    }
+
+    .detect-box::after {
+      content: "";
+      position: absolute;
+      right: -5px;
+      top: -5px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #21e49a;
+    }
+
+    @keyframes boxIn {
+      from { opacity: 0; transform: scale(0.88); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .result-card {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      padding: 14px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.96);
+      color: var(--ink);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .big-count {
+      color: var(--primary);
+      font-size: 38px;
+      line-height: 1;
+      font-weight: 950;
+    }
+
+    .photo-card {
+      height: 286px;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      background: #162331;
+      margin-bottom: 12px;
+    }
+
+    .summary-product {
+      display: grid;
+      grid-template-columns: 82px 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+    }
+
+    .qty {
+      display: grid;
+      grid-template-columns: 46px 1fr 46px;
+      gap: 10px;
+      align-items: center;
+      margin: 16px 0 10px;
+    }
+
+    .qty button {
+      height: 46px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      font-size: 23px;
+      font-weight: 950;
+    }
+
+    .qty strong {
+      height: 50px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .warning {
+      margin: 10px 0 14px;
+      padding: 9px 12px;
+      border: 1px solid #ffcbd1;
+      border-radius: 999px;
+      color: var(--primary);
+      background: #fff1f3;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .save-card,
+    .stat-card,
+    .draft-item,
+    .sent-card,
+    .exception-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+      box-shadow: 0 5px 15px rgba(17, 24, 39, 0.05);
+    }
+
+    .save-card {
+      padding: 12px;
+    }
+
+    .save-image {
+      height: 112px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #162331;
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .stat-card {
+      padding: 12px;
+    }
+
+    .stat-card span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .stat-card strong {
+      display: block;
+      margin-top: 4px;
+      color: var(--primary);
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .sticky-action {
+      padding: 13px 14px 16px;
+      background: linear-gradient(180deg, rgba(246,248,251,0), var(--soft) 24%);
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .filters span {
+      padding: 8px 12px;
+      border: 1px solid #d6dee7;
+      border-radius: 999px;
+      background: white;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .filters .active {
+      color: var(--primary);
+      border-color: var(--primary);
+      background: #fff1f3;
+    }
+
+    .draft-item {
+      display: grid;
+      grid-template-columns: 72px 1fr 34px;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      margin-bottom: 9px;
+    }
+
+    .delete {
+      width: 30px;
+      height: 30px;
+      border: 0;
+      border-radius: 50%;
+      background: #ffe8eb;
+      color: var(--primary);
+      font-weight: 950;
+    }
+
+    .sent-card {
+      overflow: hidden;
+    }
+
+    .sent-top {
+      padding: 14px;
+      border-bottom: 1px solid #eef2f6;
+    }
+
+    .sent-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .sent-stats div {
+      padding: 14px;
+      text-align: center;
+      border-right: 1px solid #eef2f6;
+    }
+
+    .sent-stats div:last-child { border-right: 0; }
+
+    .sent-stats strong {
+      display: block;
+      color: var(--primary);
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .exception-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .exception-card {
+      padding: 12px;
+    }
+
+    .exception-card strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    .exception-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .modal {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(17, 24, 39, 0.55);
+      z-index: 5;
+    }
+
+    .modal-box {
+      width: 100%;
+      padding: 20px;
+      border-radius: 16px;
+      background: white;
+      text-align: center;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.22);
+    }
+
+    .panel {
+      min-width: 0;
+      height: fit-content;
+      padding: 18px;
+      border: 1px solid rgba(228, 233, 239, 0.95);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.87);
+      box-shadow: var(--shadow);
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.48;
+    }
+
+    .result-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .result-item {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+    }
+
+    .result-item span {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    .result-item strong {
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .payload {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 8px;
+      background: #101820;
+      color: #d9f5ef;
+      white-space: pre-wrap;
+      max-height: 260px;
+      overflow: auto;
+      font-size: 12px;
+      line-height: 1.55;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    .video-section {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr minmax(280px, 520px);
+      gap: 18px;
+      align-items: center;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.88);
+    }
+
+    .video-section h2 {
+      margin: 0 0 6px;
+      font-size: 20px;
+    }
+
+    .video-section p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .video-section video {
+      width: 100%;
+      border-radius: 8px;
+      background: #101820;
+      border: 1px solid #dce3ea;
+    }
+
+    body.freeze * {
+      animation-play-state: paused !important;
+      transition: none !important;
+    }
+
+    body.freeze .detect-box {
+      animation: none !important;
+      opacity: var(--box-opacity, 1) !important;
+      transform: none !important;
+    }
+
+    body.freeze .scan-line {
+      animation: none !important;
+      top: calc(12% + (76% * var(--scan-progress, 0))) !important;
+    }
+
+    body.record {
+      overflow: hidden;
+    }
+
+    body.record .video-section { display: none; }
+
+    body.record .shell {
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    body.record .flow {
+      gap: 6px;
+    }
+
+    body.record .flow button {
+      padding: 8px 10px;
+    }
+
+    body.record .flow-copy { display: none; }
+
+    body.record .phone {
+      width: 340px;
+      height: 720px;
+    }
+
+    body.record .statusbar {
+      height: 24px;
+      padding-top: 6px;
+    }
+
+    body.record .appbar {
+      min-height: 50px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+    }
+
+    body.record .camera-view {
+      height: 520px;
+    }
+
+    body.record .camera-footer {
+      min-height: 86px;
+    }
+
+    @media (max-width: 1180px) {
+      .shell {
+        grid-template-columns: 260px 1fr;
+      }
+      .panel { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 760px) {
+      .shell {
+        display: block;
+        padding: 12px;
+      }
+      .stage-head,
+      .panel,
+      .video-section {
+        margin-top: 14px;
+      }
+      .phone {
+        width: min(100%, 390px);
+        height: 812px;
+        margin: 0 auto;
+      }
+      .video-section {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <aside>
+      <div class="brand">
+        <img src="assets/baksters-heart.png" alt="Baksters heart logo">
+        <div>
+          <strong>Baksters Counting</strong>
+          <span>Real UI prototype</span>
+        </div>
+      </div>
+      <div id="flow" class="flow"></div>
+    </aside>
+
+    <section class="stage">
+      <div class="stage-head">
+        <div>
+          <h1 id="screenTitle">Baksters Counting</h1>
+          <p id="screenSubtitle">Real UI prototype</p>
+        </div>
+        <div class="stage-nav">
+          <button type="button" id="prev">&lt;</button>
+          <button type="button" id="next">&gt;</button>
+        </div>
+      </div>
+      <div class="phone">
+        <div id="phone"></div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <h2 id="resultTitle">Result</h2>
+      <p id="resultBody"></p>
+      <div id="resultList" class="result-list"></div>
+      <pre id="payload" class="payload"></pre>
+    </aside>
+
+    <section class="video-section">
+      <div>
+        <h2>Real UI Walkthrough Video</h2>
+        <p>This video is generated from the same UI, including scanner movement and staged AI detection overlays.</p>
+      </div>
+      <video controls muted playsinline preload="metadata" poster="assets/real-ui/screens/04-home.png">
+        <source src="assets/real-ui/baksters-real-ui-walkthrough.mp4" type="video/mp4">
+      </video>
+    </section>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const recordMode = params.get("record") === "1";
+    const frame = Number(params.get("frame") || 0);
+    if (recordMode) document.body.classList.add("record");
+    if (frame > 0) document.body.classList.add("freeze");
+
+    const products = [
+      {
+        sku: "885-BKS-0301",
+        name: "Baksters Glow Box Advanced Skincare 30 ml",
+        shortName: "Glow Box 30 ml",
+        image: "assets/real-ui/product-glow-box.png",
+        qty: 12,
+        location: "Counter"
+      },
+      {
+        sku: "885-BKS-1002",
+        name: "Baksters Cleansing Tube Gentle Cleanser 100 ml",
+        shortName: "Cleansing Tube 100 ml",
+        image: "assets/real-ui/product-cleansing-tube.png",
+        qty: 8,
+        location: "Counter"
+      },
+      {
+        sku: "885-BKS-2503",
+        name: "Baksters Black Mask Deep Cleansing 25 ml",
+        shortName: "Black Mask 25 ml",
+        image: "assets/real-ui/product-black-mask.png",
+        qty: 0,
+        location: "Backroom"
+      },
+      {
+        sku: "885-BKS-3004",
+        name: "Baksters Serum Intensive Care Set 30 ml",
+        shortName: "Serum Set 30 ml",
+        image: "assets/real-ui/product-serum-set.png",
+        qty: 5,
+        location: "Backroom"
+      }
+    ];
+
+    const statusbar = () => `
+      <div class="statusbar">
+        <span>23:42</span>
+        <span>5G 82%</span>
+      </div>
+    `;
+
+    const appbar = (title, opts = {}) => `
+      <div class="appbar ${opts.center ? "center" : ""}">
+        ${opts.back ? '<button class="icon-btn" aria-label="Back">&lt;</button>' : ""}
+        <div class="appbar-title">${title}</div>
+        ${opts.close ? '<button class="icon-btn" aria-label="Close">x</button>' : (opts.back ? '<span style="width:36px"></span>' : "")}
+      </div>
+    `;
+
+    const bottomNav = (active) => {
+      const items = ["Home", "Drafts", "Sent", "Profile"];
+      return `<nav class="bottom-nav">${items.map((item) => `
+        <div class="navitem ${active === item ? "active" : ""}">
+          <span class="navicon"></span>
+          <span>${item}</span>
+        </div>
+      `).join("")}</nav>`;
+    };
+
+    const productCard = (p, opts = {}) => `
+      <article class="product-card ${opts.locked ? "locked" : ""}">
+        ${opts.locked ? '<span class="lock-label">Counting now</span>' : ""}
+        <img class="product-img" src="${p.image}" alt="${p.name}">
+        <div>
+          <div class="sku">SKU: ${p.sku}</div>
+          <p class="name">${p.shortName}</p>
+        </div>
+        <button class="pill">${opts.out ? "Out of stock" : "Count"}</button>
+      </article>
+    `;
+
+    function detectionBoxes(maxVisible = 12) {
+      const boxes = [
+        [25, 42, 54, 92], [94, 42, 54, 92], [163, 42, 54, 92], [232, 42, 54, 92],
+        [25, 181, 54, 92], [94, 181, 54, 92], [163, 181, 54, 92], [232, 181, 54, 92],
+        [25, 320, 54, 88], [94, 320, 54, 88], [163, 320, 54, 88], [232, 320, 54, 88]
+      ];
+      return boxes.map(([left, top, width, height], i) => `
+        <span class="detect-box" style="left:${left}px;top:${top}px;width:${width}px;height:${height}px;--delay:${i * 70}ms;--box-opacity:${i < maxVisible ? 1 : 0.16}"></span>
+      `).join("");
+    }
+
+    function shelfScene(visibleBoxes = 12) {
+      const row = [0,1,2,3].map((_, i) =>
+        `<img class="shelf-product" src="${products[i % 2 === 0 ? 0 : 3].image}" alt="">`
+      ).join("");
+      return `
+        <div class="shelf-scene">
+          <div class="shelf-row">${row}</div>
+          <div class="shelf-row">${row}</div>
+          <div class="shelf-row">${row}</div>
+          ${detectionBoxes(visibleBoxes)}
+        </div>
+      `;
+    }
+
+    function scanScreen() {
+      const progress = frame > 0 ? ((frame - 1) % 8) / 7 : 0;
+      const detected = !frame || frame >= 6;
+      return `
+        <div class="screen camera-screen">
+          ${statusbar()}
+          ${appbar("Scan Baksters SKU", { back: true, close: true })}
+          <div class="camera-view">
+            <img class="scan-product" src="${products[0].image}" alt="${products[0].name}">
+            <div class="barcode-label"><span class="barcode-bars"></span></div>
+            <div class="scan-guide">
+              <span class="scan-target"></span>
+              <span class="scan-line" style="--scan-progress:${progress}"></span>
+            </div>
+            <div class="scan-hint">
+              ${detected
+                ? '<span class="detected-pop"><span class="green-dot"></span>Detected 885-BKS-0301 - product match</span>'
+                : 'Hold the barcode inside the guide'}
+            </div>
+          </div>
+          <div class="camera-footer"><div class="shutter"></div></div>
+        </div>
+      `;
+    }
+
+    function countScreen() {
+      const visible = frame > 0 ? Math.min(12, Math.max(1, frame * 2)) : 12;
+      return `
+        <div class="screen camera-screen">
+          ${statusbar()}
+          ${appbar("Count product", { back: true, close: true })}
+          <div class="camera-view">
+            ${shelfScene(visible)}
+            <div class="result-card">
+              <div>
+                <strong>AI count complete</strong>
+                <p style="margin:4px 0 0;color:var(--muted);font-size:12px">${visible >= 12 ? "12" : visible} products detected</p>
+              </div>
+              <div class="big-count">${visible >= 12 ? "12" : visible}</div>
+            </div>
+          </div>
+          <div class="camera-footer"><div class="shutter"></div></div>
+        </div>
+      `;
+    }
+
+    function verifyPhoto() {
+      return `<div class="photo-card">${shelfScene(12)}</div>`;
+    }
+
+    const screens = [
+      {
+        id: "entry",
+        nav: "LINE Entry",
+        title: "Entry screen",
+        subtitle: "Baksters branded LIFF entry with real app density",
+        body: "A practical field-app entry screen, keeping the user focused on the active store and count round.",
+        html: `
+          <div class="screen">
+            ${statusbar()}
+            <div class="brand-card">
+              <img src="assets/baksters-heart.png" alt="Baksters">
+              <h2>Baksters Counting</h2>
+              <p>Mobile stock counting for BA store teams.</p>
+              <div class="profile-row">
+                <div class="avatar">BA</div>
+                <div>
+                  <strong>Nicha Baksters</strong>
+                  <p style="margin:4px 0 0;color:var(--muted);font-size:12px">LINE connected - Siam Paragon</p>
+                </div>
+              </div>
+              <button class="primary" style="margin-top:18px">Start counting</button>
+            </div>
+          </div>
+        `,
+        results: [["Identity", "LINE profile and Baksters brand loaded."], ["Store", "BKS-SPG / Siam Paragon."], ["Next", "/home"]],
+        payload: { brand: "Baksters", authStatus: "linked", storeCode: "BKS-SPG" }
+      },
+      {
+        id: "register",
+        nav: "Register",
+        title: "Registration",
+        subtitle: "Bottom-sheet registration with real app controls",
+        body: "Same workflow as the production app: LINE identity, phone number, then admin approval.",
+        html: `
+          <div class="screen">
+            ${statusbar()}
+            ${appbar("Baksters Counting", { center: true })}
+            <div class="content" style="display:flex;flex-direction:column">
+              <div class="status-card" style="margin-top:30px">
+                <div class="status-icon" style="background:#ffe8eb;color:var(--primary)">B</div>
+                <h2>Connect BA account</h2>
+                <p>Confirm this LINE account before starting stock count.</p>
+              </div>
+              <div class="sheet">
+                <h2>Register for Baksters</h2>
+                <p>Use the phone number assigned by the field team.</p>
+                <div class="field"><label>LINE display name</label><div class="input">Nicha Baksters</div></div>
+                <div class="field"><label>Phone number</label><div class="input">0812345678</div></div>
+                <button class="primary">Submit registration</button>
+              </div>
+            </div>
+          </div>
+        `,
+        results: [["Validation", "Thai mobile number format."], ["Status", "pending_approval after submit."], ["Admin", "Approves store and date window."]],
+        payload: { lineDisplayName: "Nicha Baksters", phoneNumber: "0812345678", status: "pending_approval" }
+      },
+      {
+        id: "approval",
+        nav: "Approval",
+        title: "Approval state",
+        subtitle: "Pending access gate",
+        body: "Keeps the field user out of the checklist until admin approval is complete.",
+        html: `
+          <div class="screen">
+            ${statusbar()}
+            ${appbar("Account status", { center: true })}
+            <div class="content">
+              <div class="status-card">
+                <div class="status-icon">!</div>
+                <h2>Waiting for approval</h2>
+                <p>Your Baksters field account is registered. Admin activation is required before counting.</p>
+                <div class="stat-grid">
+                  <div class="stat-card"><span>Store</span><strong style="font-size:18px">BKS-SPG</strong></div>
+                  <div class="stat-card"><span>Locations</span><strong>2</strong></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `,
+        results: [["Pending", "Checklist is blocked."], ["Inactive", "Admin-deactivated users stop here."], ["Expired", "Date-window access can expire."]],
+        payload: { authStatus: "pending_approval", allowed: false }
+      },
+      {
+        id: "home",
+        nav: "Home",
+        title: "Counting home",
+        subtitle: "Real product cards, tabs, lock, and deadline",
+        body: "The product list uses Baksters-only packshots and the same real operational states: location tabs, remaining count, soft lock, and out-of-stock action.",
+        html: `
+          <div class="screen">
+            ${statusbar()}
+            ${appbar("Baksters Counting", { center: true })}
+            <div class="tabs"><div class="tab active">Counter (3)</div><div class="tab">Backroom (2)</div></div>
+            <div class="content">
+              <div class="round-strip">Counting cutoff: 25 Jun 2026, 23:59</div>
+              <div class="search">Search barcode or product name</div>
+              <div class="product-list">
+                ${productCard(products[0])}
+                ${productCard(products[1], { locked: true })}
+                ${productCard(products[2], { out: true })}
+                ${productCard(products[3])}
+              </div>
+            </div>
+            ${bottomNav("Home")}
+          </div>
+        `,
+        results: [["Product image", "Baksters-only generated packshots."], ["Soft lock", "Yellow state blocks another BA."], ["Out of stock", "Creates quantity-zero draft."]],
+        payload: { remainingByLocation: { Counter: 3, Backroom: 2 }, lockedSku: products[1].sku, productImages: "Baksters-only" }
+      },
+      {
+        id: "scan",
+        nav: "Barcode Scan",
+        title: "Barcode scanner",
+        subtitle: "Animated scan line and detection feedback",
+        body: "This page now moves in the live HTML and in the generated video: the scan line sweeps across the barcode and the detected state appears.",
+        html: scanScreen(),
+        results: [["Motion", "CSS scan sweep in HTML and staged scan frames in video."], ["Input", "Expected SKU compared against detected barcode."], ["Result", "Match opens product confirmation."]],
+        payload: { expectedSku: products[0].sku, detectedSku: products[0].sku, compareVerdict: "match", scanMotion: true }
+      },
+      {
+        id: "match",
+        nav: "SKU Match",
+        title: "Product confirmation",
+        subtitle: "Real packshot confirmation before AI count",
+        body: "The confirmation screen presents a real product image, SKU, selected location, and confidence before starting the count camera.",
+        html: `
+          <div class="screen">
+            ${statusbar()}
+            ${appbar("Confirm Product", { back: true })}
+            <div class="content">
+              <div class="confirm-card">
+                <div class="confirm-hero"><img src="${products[0].image}" alt="${products[0].name}"></div>
+                <div class="sku">SKU: ${products[0].sku}</div>
+                <h3 style="margin:4px 0 4px;font-size:17px">${products[0].name}</h3>
+                <p style="margin:0;color:var(--muted);font-size:12px">Location: Counter</p>
+                <div class="confidence"><span></span></div>
+                <p style="margin:8px 0 0;color:var(--green);font-size:12px;font-weight:850">Barcode confidence 97%</p>
+              </div>
+              <button class="primary" style="margin-top:14px">Open counting camera</button>
+              <button class="secondary" style="margin-top:10px">Scan again</button>
+            </div>
+          </div>
+        `,
+        results: [["Reference", "Uses Baksters packshot."], ["Context", "SKU/location/round carried into count flow."], ["Fallback", "Scan again remains available."]],
+        payload: { selectedSku: products[0].sku, selectedLocation: "Counter", confidence: 0.97 }
+      },
+      {
+        id: "count",
+        nav: "AI Count",
+        title: "Counting camera",
+        subtitle: "Animated detection boxes on Baksters products",
+        body: "The count screen builds a product shelf from Baksters packshots and animates detection boxes for a more real model-result feel.",
+        html: countScreen(),
+        results: [["Detection", "12 products detected."], ["Image", "Scene uses Baksters packshot shelf, no old brand photos."], ["Output", "Raw count plus boxes go to review."]],
+        payload: { model: "baksters-counting-yolo", count: 12, boundingBoxes: 12 }
+      },
+      {
+        id: "verify",
+        nav: "Verify",
+        title: "Verify quantity",
+        subtitle: "Adjust quantity or retake before saving",
+        body: "This screen mirrors the real verify step: count photo, product summary, quantity counter, warning, and draft button.",
+        html: `
+          <div class="screen">
+            ${statusbar()}
+            ${appbar("Verify Products", { back: true, close: true })}
+            <div class="content">
+              ${verifyPhoto()}
+              <button class="secondary" style="min-height:38px">Retake stock photo</button>
+              <div class="summary-product" style="margin-top:12px">
+                <img class="product-img" src="${products[0].image}" alt="${products[0].name}">
+                <div><div class="sku">SKU: ${products[0].sku}</div><p class="name">${products[0].shortName}</p></div>
+              </div>
+              <div class="qty"><button>-</button><strong>12</strong><button>+</button></div>
+              <div class="warning">Please verify the quantity before saving</div>
+              <button class="primary">Add to draft</button>
+            </div>
+          </div>
+        `,
+        results: [["Editable", "BA can adjust count."], ["Audit", "Boxes and packshot remain visible."], ["Next", "Save pending product item."]],
+        payload: { finalQuantity: 12, status: "pending", canRetake: true }
+      },
+      {
+        id: "save",
+        nav: "Save",
+        title: "Save result",
+        subtitle: "Review and persist stock item",
+        body: "The save/review page shows exactly what will be stored before returning to the home checklist.",
+        html: `
+          <div class="screen">
+            ${statusbar()}
+            ${appbar("Review Details", { back: true })}
+            <div class="content">
+              <div class="save-card">
+                <div class="save-image">${shelfScene(12)}</div>
+                <div class="summary-product">
+                  <img class="product-img" src="${products[0].image}" alt="${products[0].name}">
+                  <div><div class="sku">SKU: ${products[0].sku}</div><p class="name">${products[0].shortName}</p><p style="margin:5px 0 0;color:var(--muted);font-size:12px">Counter - 25 Jun 2026</p></div>
+                </div>
+                <div class="stat-grid">
+                  <div class="stat-card"><span>Quantity</span><strong>12</strong></div>
+                  <div class="stat-card"><span>Confidence</span><strong>97%</strong></div>
+                </div>
+              </div>
+            </div>
+            <div class="sticky-action"><button class="primary">Save to draft</button></div>
+          </div>
+        `,
+        results: [["Session", "Creates/uses count session."], ["Files", "Count photo and product image stored."], ["Home", "Remaining count updates after save."]],
+        payload: { sessionId: "sess-bks-0091", itemId: "item-bks-1182", quantity: 12 }
+      },
+      {
+        id: "drafts",
+        nav: "Drafts",
+        title: "Draft review",
+        subtitle: "Review pending items before sending",
+        body: "Drafts use realistic product thumbnails and provide totals, delete/edit affordance, and a send button.",
+        html: `
+          <div class="screen">
+            ${statusbar()}
+            ${appbar("Drafts", { center: true })}
+            <div class="content">
+              <div class="filters"><span class="active">All</span><span>Counter</span><span>Backroom</span></div>
+              <div class="stat-grid">
+                <div class="stat-card"><span>Total items</span><strong>3</strong></div>
+                <div class="stat-card"><span>Total units</span><strong>25</strong></div>
+              </div>
+              <div class="draft-item">
+                <img class="product-img" src="${products[0].image}" alt="${products[0].name}">
+                <div><div class="sku">SKU: ${products[0].sku}</div><p class="name">${products[0].shortName}</p><p style="margin:5px 0 0;color:var(--muted);font-size:12px"><strong>12</strong> pcs</p></div>
+                <button class="delete">x</button>
+              </div>
+              <div class="draft-item">
+                <img class="product-img" src="${products[2].image}" alt="${products[2].name}">
+                <div><div class="sku">SKU: ${products[2].sku}</div><p class="name">${products[2].shortName}</p><p style="margin:5px 0 0;color:var(--primary);font-size:12px;font-weight:850">Out of stock</p></div>
+                <button class="delete">x</button>
+              </div>
+            </div>
+            <div class="sticky-action"><button class="primary">Send to admin</button></div>
+            ${bottomNav("Drafts")}
+          </div>
+        `,
+        results: [["Draft", "Pending until manual send or cutoff."], ["Scope", "Store-wide pending items."], ["Send", "Admin receives completed round."]],
+        payload: { pendingItems: 3, totalUnits: 25, sendEnabled: true }
+      },
+      {
+        id: "sent",
+        nav: "Sent",
+        title: "Sent result",
+        subtitle: "Round-level result and export readiness",
+        body: "Sent results show a round folder plus admin export readiness, matching the current real workflow.",
+        html: `
+          <div class="screen">
+            ${statusbar()}
+            ${appbar("Sent", { center: true })}
+            <div class="content">
+              <div class="sent-card">
+                <div class="sent-top">
+                  <p style="margin:0 0 4px;color:var(--muted);font-size:12px">25 Jun 2026 23:42</p>
+                  <h3 style="margin:0;font-size:16px">Stock Count Round - Baksters Siam Paragon</h3>
+                </div>
+                <div class="sent-stats">
+                  <div><strong>4</strong><span>Items</span></div>
+                  <div><strong>30</strong><span>Units</span></div>
+                </div>
+              </div>
+              <div class="stat-grid">
+                <div class="stat-card"><span>Excel</span><strong style="font-size:18px">Ready</strong></div>
+                <div class="stat-card"><span>Images</span><strong style="font-size:18px">Linked</strong></div>
+              </div>
+            </div>
+            ${bottomNav("Sent")}
+          </div>
+        `,
+        results: [["Status", "Pending drafts moved to sent."], ["Export", "Excel rows include SKU, quantity, BA, location, images."], ["History", "Round summary remains visible."]],
+        payload: { sentAt: "2026-06-25T23:42:00+07:00", exportedRows: 4, exportedUnits: 30 }
+      },
+      {
+        id: "exceptions",
+        nav: "Exceptions",
+        title: "Exception states",
+        subtitle: "Out-of-stock, cutoff, and soft lock",
+        body: "Operational states are shown in the same visual system so field staff see realistic popups and blocking states.",
+        html: `
+          <div class="screen">
+            ${statusbar()}
+            ${appbar("Operational States", { center: true })}
+            <div class="content">
+              <div class="exception-list">
+                <div class="exception-card"><strong>Out of stock</strong><p>Creates a draft with quantity 0 and optional note.</p></div>
+                <div class="exception-card"><strong>Cutoff auto-send</strong><p>Drafts are sent when the round expires.</p></div>
+                <div class="exception-card"><strong>Soft lock</strong><p>Blocks products another BA is actively counting.</p></div>
+              </div>
+            </div>
+            <div class="modal">
+              <div class="modal-box">
+                <div class="status-icon" style="width:56px;height:56px;background:#ffe8eb;color:var(--primary);margin-bottom:12px">x</div>
+                <h3 style="margin:0 0 6px">Report out of stock?</h3>
+                <p style="margin:0 0 14px;color:var(--muted);font-size:12px">${products[2].shortName} will be saved in Drafts with quantity 0.</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+                  <button class="secondary">Cancel</button>
+                  <button class="primary">Confirm</button>
+                </div>
+              </div>
+            </div>
+            ${bottomNav("Home")}
+          </div>
+        `,
+        results: [["Out of stock", "Quantity-zero item saved."], ["Cutoff", "Auto-send protects deadline."], ["Lock", "Avoids duplicate counting."]],
+        payload: { isOutOfStock: true, cutoffAutoSend: true, lockTtlMinutes: 5 }
+      }
+    ];
+
+    let activeIndex = 0;
+    const requested = params.get("screen");
+    const initial = screens.findIndex((screen) => screen.id === requested);
+    if (initial >= 0) activeIndex = initial;
+
+    const flow = document.getElementById("flow");
+    const phone = document.getElementById("phone");
+    const title = document.getElementById("screenTitle");
+    const subtitle = document.getElementById("screenSubtitle");
+    const resultTitle = document.getElementById("resultTitle");
+    const resultBody = document.getElementById("resultBody");
+    const resultList = document.getElementById("resultList");
+    const payload = document.getElementById("payload");
+
+    function renderFlow() {
+      flow.innerHTML = screens.map((screen, index) => `
+        <button type="button" class="${index === activeIndex ? "active" : ""}" data-index="${index}">
+          <span class="num">${index + 1}</span>
+          <span><span class="flow-title">${screen.nav}</span><span class="flow-copy">${screen.subtitle}</span></span>
+        </button>
+      `).join("");
+      flow.querySelectorAll("button").forEach((button) => {
+        button.addEventListener("click", () => setScreen(Number(button.dataset.index), true));
+      });
+    }
+
+    function setScreen(index, pushState = false) {
+      activeIndex = (index + screens.length) % screens.length;
+      const screen = screens[activeIndex];
+      title.textContent = screen.title;
+      subtitle.textContent = screen.subtitle;
+      phone.innerHTML = screen.html;
+      resultTitle.textContent = screen.nav + " Result";
+      resultBody.textContent = screen.body;
+      resultList.innerHTML = screen.results.map(([label, value]) => `
+        <div class="result-item"><span>${label}</span><strong>${value}</strong></div>
+      `).join("");
+      payload.textContent = JSON.stringify(screen.payload, null, 2);
+      renderFlow();
+      if (pushState) {
+        const url = new URL(window.location.href);
+        url.searchParams.set("screen", screen.id);
+        url.searchParams.delete("frame");
+        window.history.replaceState({}, "", url);
+      }
+    }
+
+    document.getElementById("prev").addEventListener("click", () => setScreen(activeIndex - 1, true));
+    document.getElementById("next").addEventListener("click", () => setScreen(activeIndex + 1, true));
+    setScreen(activeIndex);
+  </script>
+</body>
+</html>
